@@ -1,0 +1,207 @@
+body, html {
+    
+    font-family: "Arial", Verdana, Geneva, sans-serif;
+}
+
+/* Navbar coloring/gradient */
+.navbar-gradient {
+    background: linear-gradient(rgba(40, 40, 40, 0.5), rgba(40, 40, 40, 0) 100%);
+}
+
+/* Tagline and vertical centering */
+#tagline {
+    color:white;
+    font-weight: light;
+    font-size: 100px;
+    position: relative;
+}
+.vertical-center {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+/* Logo and its Centering */
+.navbar-brand-center-signup {
+    transform: translateX(-50%);
+    left: 50%;
+    position: absolute;
+}
+.navbar-brand-center-signup > img {
+    width: 50px;
+    height: auto;
+}
+
+
+
+/*form.example input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    float: center;
+    width: 40%;
+    border: 0px solid grey;
+    background: #f1f1f1;
+}
+form.example button {
+    transition: .1s ease;
+    float: center;
+    width: 60px;
+    padding: 10px;
+    background-color: #ddd;
+    font-size: 17px;
+    border: 0px solid grey;
+    border-left: none;
+    cursor: pointer;
+    outline: 0;
+    color: #555;
+}
+
+form.example button:hover {
+    transition: .1s ease;
+    background-color: #555;
+    color: #ddd;
+}
+form.fa-search {
+    transition: .1s ease;
+    color: #555;
+}
+form.fa-search button:hover {
+    transition: .1s ease;
+    color: #ddd;
+}
+form.example::after {
+    content: "";
+    clear: both;
+    display: table;
+}*/
+/* The searchbar */
+form.searchbar input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    float: center;
+    width: 40%;
+    border: 0px solid grey;
+    background: #f1f1f1;
+}
+form.searchbar button {
+    transition: .1s ease;
+    float: center;
+    width: 60px;
+    padding: 10px;
+    /*background: #2196F3;*/
+    background-color: #ddd;
+    font-size: 17px;
+    border: 0px solid grey;
+    border-left: none;
+    cursor: pointer;
+    outline: 0;
+    color: #555;
+}
+form.searchbar button:hover {
+    /*background: #0b7dda;*/
+    transition: .1s ease;
+    background-color: #555;
+    color: #ddd;
+
+}
+form.fa-search {
+    transition: .1s ease;
+    color: #555;
+}
+form.fa-search button:hover {
+    transition: .1s ease;
+    color: #ddd;
+}
+form.searchbar::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.navbar-center-1 {
+    margin: auto;
+    width: 100%;
+    text-align: center;
+}
+
+.navbar-center-2 {
+    display: inline-block;
+    float: none;
+    vertical-align: top;
+}
+/* Tagline and vertical centering */
+#tagline {
+    color:white;
+    font-weight: light;
+    font-size: 100px;
+    position: relative;
+}
+.vertical-center {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+/* Logo and its Centering */
+.navbar-brand-center-signup {
+    transform: translateX(-50%);
+    left: 50%;
+    position: absolute;
+}
+.navbar-brand-center-signup > img {
+    width: 50px;
+    height: auto;
+}
+
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/*li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: white;
+}*/
+
+.active {
+    background-color:  black;
+}	
+
+.body, html {
+    height: 100%;
+    margin: 0;
+    
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+    
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 100vh;
+    background-color: #FFA500;	
+}
+
+.backgrnd{
+    background: rgb(255, 204, 110);
+}
+
+
+
