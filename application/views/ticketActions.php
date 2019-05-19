@@ -41,12 +41,18 @@
         <div class="col-sm-6">
             <h1>Ticket Details</h1>
                 <?php
-                    if(!empty($success_msg)){
+                    /*if(!empty($success_msg)){
                         echo '<div style="color: blue;"
                             <h3 class="statusMsg">'.$success_msg.'</h3></div>';
                     }elseif(!empty($error_msg)){
                         echo ' <div style="color: red;">
                             <h3 class="statusMsg">'.$error_msg.'</h3></div>';
+                    }*/
+                    if($this->session->flashdata('success')!=null){
+                        echo '<p style="color:blue">'.$this->session->flashdata('success').'</p>';
+                    }
+                    elseif($this->session->flashdata('fail')!=null){
+                        echo '<p style="color:red">'.$this->session->flashdata('fail').'</p>';
                     }
                             
                 ?>  
@@ -54,6 +60,7 @@
                     <li class="list-group-item"><?php echo "Ticket ID: ".$details[0]['ticketID'];?></li>
                     <li class="list-group-item"><?php echo "Token #: ".$details[0]['token'];?></li>
                     <li class="list-group-item"><?php echo "Date Added: ".$details[0]['dateAdded'];?></li>
+                    <li class="list-group-item"><?php echo "Title/General Idea: ".$details[0]['ticketTitle'];?></li>
                     <li class="list-group-item"><?php echo "Customer Name: ".$details[0]['customerName'];?></li>
                     <li class="list-group-item"><?php echo "Customer Email: ".$details[0]['customerEmail'];?></li>
                     <li class="list-group-item"><?php echo "Customer Phone No.: ".$details[0]['customerPhone'];?></li>
@@ -89,7 +96,10 @@
                     </li>
                     <li class="list-group-item"><?php echo "Description: ".$details[0]['description'];?></li>
                     
-                    <li class="list-group-item">Screenshot: <br><?php echo '<img src="'.$details[0]['picturePath'].'" style="width:60%">'; ?> </li>
+                    <li class="list-group-item">Screenshot: <br><?php echo '<img src="'.$details[0]['picturePath'].'" style="width:60%">'; ?> 
+                        <br><a href='<?php echo "".$details[0]['picturePath']."";?>'>View full size</a>
+                    </li>
+                    
                     
                 </ul>
         </div>
@@ -105,9 +115,9 @@
                     <div class="form-group">
                         <label for="status">Status</label>
                         <select name="status" required="">
-                            <option value=1>Open</option>
                             <option value=2>Ongoing</option>
                             <option value=3>Closed</option>
+                            <option value=1>Open</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -117,7 +127,7 @@
                 <?php echo form_close(); ?>
            
             
-            <p>Changelog</p>
+            <p><strong>Changelog</strong></p>
             <table id="changelog" class='table table-striped table-bordered' cellspacing='0' style="margin-top:3%">
                 <thead>
                 <tr>
@@ -125,8 +135,9 @@
                         <th>Ticket ID</th>
                         <th>Worked By</th>
                         <th>Date Updated</th>
+                        <th>Status</th>
                         <th>Description</th>
-                        <th>Actions</th>
+                        
 				    </tr>
                 </thead>
                 <tbody>
@@ -142,6 +153,7 @@
                             $ticketId = $value['ticketID'];
                             $workedBy = $value['userID'];
                             $dateUpdated = $value['dateUpdated'];
+                            $status = $value['status'];
                             $description = $value['description'];
                             
     
@@ -150,11 +162,17 @@
                                     echo "<td>".$ticketId."</td>";
                                     echo "<td>".$workedBy."</td>";
                                     echo "<td>".$dateUpdated."</td>";
+                                    if($status==1){
+                                        echo "<td><b>Open</b></td>";
+                                    }
+                                    elseif($status==2){
+                                        echo "<td><b>Ongoing</b></td>";
+                                    }
+                                    elseif($status==3){
+                                        echo "<td><b>Closed</b></td>";
+                                    }
                                     echo "<td>".$description."</td>";
-                                    echo '<td><a class="btn btn-primary" name="btnDetail" href="'.base_url().'index.php/UserController/ticketActions/'.$value['ticketID'].'">';
-                                    echo '<span class="fa fa-pencil"></span>';
-                                    echo '   Actions';
-                                    echo '</a></td>';
+                                    
                                     
                                     echo "</tr>";
     
@@ -164,11 +182,34 @@
                 ?>             
                 </tbody>
             </table>
+            <p><strong>Customer Feedback</strong></p>
+            <ul>
+            <?php
+                if($details[0]['approved']==0){
+                    echo '<li>Approved: <b><i>Not Yet</i></b></li>';
+                }else{
+                    echo '<li>Approved: <b>Approved</b></li>';
+                }
+                
+                if($details[0]['feedback']==null){
+                    echo '<li>Feedback: <i>No Feedback Yet</i></li>';
+                }else{
+                    echo '<li>Feedback: '.$details[0]['feedback'].'</li>';
+                }
+                
+            ?>
+            </ul>
         </div>
         
     </div>
 </div>
 
 </body>
+
+<footer class="page-footer" style="padding-top: 10%">
+         <div class="footer-copyright text-center py-3">© PT Mitra Mentari Global
+           <p>2019</p>
+        </div>
+</footer>
 
 </html>

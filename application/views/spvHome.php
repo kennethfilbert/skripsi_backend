@@ -9,100 +9,48 @@
         echo $js;
 		echo $css;
     ?>
-
     <script>
-        $(document).ready(function(){
+         $(document).ready(function(){
             $('#ticketList').dataTable();
-
-            show_notifications();
-
-            function show_notifications(){
-                $.ajax({
-                    type: 'ajax',
-                    url:<?php echo '"'.base_url().'index.php/UserController/loadNotifs'.'"'?>,
-                    async: true,
-                    dataType:'json',
-                    success:function(data)
-                    {
-                        
-                            var html ='';
-                            var i;
-                            var notifAmount= data.length;
-                            if(data.length>0){
-                            for(i=0;i<data.length;i++){
-                                
-                                html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewNotifs/';?>'+data[i].ticketID+'">'+
-                                '<strong>New Ticket available</strong><br>'+
-                                '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
-                                'Urgency: <em>'+data[i].urgency+'</em><br>'+
-                                '<small>Cust: <em>'+data[i].customerName+'</em></small>'+
-                                ' <hr></a>';
-                                        
-                            }
-                             $('.dropdown-menu').html(html);
-                       
-                            $('.count').html(data.length);
-                        }
-                        else{
-                            html += "<p>No New Notifications</p>";
-                            $('.dropdown-menu').html(html);
-                            $('.count').html(0);
-                        }
-                    }
-                });    
-            }
-
-            
-
-            $(document).on("click", "#dropdownMenuButton", function(){
-                
-             });
-        });
+         });
     </script>
-    
-    
 </head>
 <body>
-
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
-       <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/UserController/dashboard'.'">';
-            echo 'MMG SUPPORT'; 
-            echo '</a>'; ?>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                        <?php
-                            $loggedInUser = $this->session->userdata['isUserLoggedIn']['userID'];
-                            echo '<a class="nav-link" href="'.base_url().'index.php/UserController/myTickets/'.$loggedInUser.'">My Tickets</a>';
+        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/SpvController/dashboard'.'">';
+                echo 'MMG SUPPORT'; 
+                echo '</a>'; ?>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageUsers">';
+                                echo 'Manage Users'; 
+                                echo '</a>'; 
                         ?>
-                </li> 
-            
-            </ul>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Notifications: <span class="label label-pill label-danger count" style="border-radius:10px;"></span>
-                </button>
-                
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    
-                </div>
-            </div>
+                    </li> 
+                    <li class="nav-item">
+                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageCustomers">';
+                                echo 'Manage Customers'; 
+                                echo '</a>'; 
+                        ?>
+                    </li> 
+
+                </ul>
                 <?php
-                            echo '<a href="'.base_url().'index.php/UserController/logout','" style="margin-left: 3%">';
+                            echo '<a href="'.base_url().'index.php/SpvController/logout','" style="margin-left: 3%">';
                             echo '<span class="fa fa-power-off"></span>';
                             echo '   Sign Out';
                             echo '</a>';
                 ?>
-        </div>
+            </div>
+        <!-- add user, edit user, delegate ticket, add customer, manage customer-->
     </nav>
 
     <div class="container">
         <h1>All Tickets</h1>
-        <!--<button id="testBtn">Test</button>-->
-        <?php //echo base_url().'index.php/UserController/viewNotifs'?>
         <table id="ticketList" class='table table-striped table-bordered'>
 			        <thead>
 				    <tr>
@@ -166,7 +114,7 @@
                                 else{
                                     echo "<td>".$userDetails[0]['userName']."</td>";
                                 }
-                                echo '<td><a class="btn btn-primary" name="btnDetail" href="'.base_url().'index.php/UserController/ticketDetails/'.$value['ticketID'].'">';
+                                echo '<td><a class="btn btn-primary" name="btnDetail" href="'.base_url().'index.php/SpvController/spvTicketDetails/'.$value['ticketID'].'">';
                                 echo '<span class="fa fa-pencil"></span>';
                                 echo '   Details';
                                 echo '</a></td>';
@@ -177,16 +125,7 @@
                         ?>
                     </tbody>
                 </table>
-
     </div>
-
 </body>
-<footer class="page-footer" style="padding-top: 10%">
-         <div class="footer-copyright text-center py-3">© PT Mitra Mentari Global
-           <p>2019</p>
-        </div>
-</footer>
-<script>
-    
-</script>
+
 </html>

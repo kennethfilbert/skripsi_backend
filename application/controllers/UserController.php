@@ -25,6 +25,9 @@ class UserController extends CI_Controller {
 		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 		$data['ticketData'] = $this->UserModel->getAllTickets();
+		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+		$data['userDetails'] = $this->UserModel->getUserById($userID);
+		
 		$this->load->view('home', $data);
 	}
 
@@ -33,9 +36,18 @@ class UserController extends CI_Controller {
 		echo json_encode($notifData, JSON_PRETTY_PRINT);
 	}
 
-	public function viewNotifs(){
-		$notifData = $this->UserModel->viewNotification();
-		echo json_encode($notifData, JSON_PRETTY_PRINT);
+	public function viewNotifs($ticketID){
+		$data = array();
+		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
+		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+		$data['details'] = $this->UserModel->getTicketById($ticketID);
+		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+		$data['userDetails'] = $this->UserModel->getUserById($userID);
+		$data['notifData'] = $this->UserModel->viewNotification($ticketID);
+		
+		$this->load->view('detailTicket', $data);
+		
+		//echo json_encode($notifData, JSON_PRETTY_PRINT);
 	}
 
 	public function myTickets($userID){
@@ -43,6 +55,9 @@ class UserController extends CI_Controller {
 		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 		$data['ticketData'] = $this->UserModel->getTicketByUserId($userID);
+		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+		$data['userDetails'] = $this->UserModel->getUserById($userID);
+		
 		$this->load->view('myTickets', $data);
 	}
 
@@ -54,6 +69,7 @@ class UserController extends CI_Controller {
 		$data['changelog'] = $this->UserModel->getChangelog($ticketID);
 		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
 		$data['userDetails'] = $this->UserModel->getUserById($userID);
+		
 		$this->load->view('ticketActions', $data);
 	}
 
@@ -61,6 +77,7 @@ class UserController extends CI_Controller {
 	{
 		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+		
 
 		if($this->session->userdata('success_msg')){
 			$data['success_msg'] = $this->session->userdata('success_msg');
@@ -81,18 +98,26 @@ class UserController extends CI_Controller {
 			$userName = $this->input->post('username');
 					$result = $this->UserModel->getUserInfo($userName);
 					$sessionData = array(
-						'userID' => $result[0]->userID,
-						'userName' => $result[0]->userName,
-						'userEmail' => $result[0]->userEmail,
-						'userLevel' => $result[0]->userLevel,
+						'userID' => $result[0]['userID'],
+						'userName' => $result[0]['userName'],
+						'userEmail' => $result[0]['userEmail'],
+						'userLevel' => $result[0]['userLevel'],
 						'isLoggedId' => true
 						);
 
 					$this->session->set_userdata('isUserLoggedIn', $sessionData);
-					$loggedInUser = $sessionData;
+					$loggedInUser = $sessionData;	
+					$data['loggedInUser'] = $sessionData;
 					$data['ticketData'] = $this->UserModel->getAllTickets();
+					$data['userDetails'] = $this->UserModel->getUserById($result[0]['userID']);
 					//$data['success_msg'] = 'Welcome, '.$result[0]->customerUsername.'!';
-					$this->load->view('home', $data);
+					if($result[0]['userLevel'] == 2){
+						$this->load->view('home', $data);
+					}
+					elseif($result[0]['userLevel'] == 1){
+						$this->load->view('spvHome', $data);
+					}
+					
 		}
 		else if($result==false){
 				$data['error_msg'] = 'Invalid username/password.';
@@ -114,36 +139,29 @@ class UserController extends CI_Controller {
 		$data['details'] = $this->UserModel->getTicketById($ticketID);
 		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
 		$data['userDetails'] = $this->UserModel->getUserById($userID);
-
+		
 		$this->load->view('detailTicket', $data);
 	}
 
 	public function takeTicket($ticketID){
-		$data = array();
-		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
-		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-		$data['details'] = $this->UserModel->getTicketById($ticketID);
+		
 		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
-		$data['userDetails'] = $this->UserModel->getUserById($userID);
-
 		$result = $this->UserModel->handleTicket($ticketID, $userID);
 
 		if($result==true){
-			$data['success_msg'] = 'Ticket added to Your Ticket List';
-			$this->load->view('detailTicket', $data, refresh);
+			$this->session->set_flashdata('success','Ticket added to your Ticket List.');
+			redirect('UserController/ticketDetails/'.$ticketID);
 		}
 	}
 
 	public function updateTicket($ticketID){
-		$data = array();
-		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
-		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-		$data['details'] = $this->UserModel->getTicketById($ticketID);
-		$data['changelog'] = $this->UserModel->getChangelog($ticketID);
+		
+		
 		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
-		$data['userDetails'] = $this->UserModel->getUserById($userID);
-
+		
+		$emailDetails = $this->UserModel->getTicketById($ticketID);
 		$ticketData = array(
+			
 			'status' => $this->input->post('status')
 		);
 		$changelogData = array(
@@ -152,13 +170,27 @@ class UserController extends CI_Controller {
 			'status' => $this->input->post('status'),
 			'description' => $this->input->post('changes')
 		);
+		$emailData = array(
+			'token' => $emailDetails[0]['token'],
+			'ticketTitle' => $emailDetails[0]['ticketTitle'],
+			'customerName' => $emailDetails[0]['customerName'],
+			'customerEmail' => $emailDetails[0]['customerEmail'],
+			'customerPhone' => $emailDetails[0]['customerPhone'],
+			'productName' => $emailDetails[0]['productName'],
+			'inquiryType' => $emailDetails[0]['inquiryType'],
+			'description' => $emailDetails[0]['description']
+		);
 		
-		$result = $this->UserModel->updateTicket($ticketData, $changelogData, $ticketID);
+		$result = $this->UserModel->updateTicket($ticketData, $changelogData, $emailData, $ticketID);
 
 		if($result == true){
-			$data['success_msg'] = 'Ticket and changelog has been Updated';
+			$this->session->set_flashdata('success','Ticket and changelog has been updated, update e-mail has been sent');
 			
-			$this->load->view('ticketActions', $data);
+			redirect('UserController/ticketActions/'.$ticketID);
+		}
+		else{
+			$this->session->set_flashdata('fail','Something went wrong');
+			redirect('UserController/ticketActions/'.$ticketID);
 		}
 	}
 }

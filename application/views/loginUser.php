@@ -12,11 +12,11 @@
 </head>
 <body class="bg-dark">
     
-    <div class="container" style="margin-top: 5%">
+    <div class="container" style="margin-top: 5%; width: 50%; border-radius: 50px; background: white; padding:5%">
     <img src="http://192.168.0.10/skripsi/assets/mmg.png" style=" display: block;
-                     margin-left: auto;
-                        margin-right: auto;
-                        width: 30%">
+                        margin-left: auto;
+                            margin-right: auto;
+                            width: 30%">
     <h1 style="text-align:center"> PT Mitra Mentari Global Customer Support </h1><br>
         <?php
             if(!empty($success_msg)){
@@ -52,9 +52,10 @@
     </div>
     
 </body>
-    <footer class="page-footer" style="padding-top: 10%">
-         <div class="footer-copyright text-center py-3">© PT Mitra Mentari Global
-           <p>2019</p>
+    <footer class="page-footer" style="padding-top: 10%;">
+         <div class="footer-copyright text-center py-3">
+             <p style="color:white">© PT Mitra Mentari Global</p>
+           <p style="color:white">2019</p>
         </div>
     </footer>
 

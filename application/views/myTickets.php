@@ -10,10 +10,54 @@
 		echo $css;
     ?>
     <script>
-			$(document).ready(function(){
-				$('#ticketList').DataTable();
-			});
-	</script>
+        $(document).ready(function(){
+            $('#ticketList').dataTable();
+
+            show_notifications();
+
+            function show_notifications(){
+                $.ajax({
+                    type: 'ajax',
+                    url:<?php echo '"'.base_url().'index.php/UserController/loadNotifs'.'"'?>,
+                    async: true,
+                    dataType:'json',
+                    success:function(data)
+                    {
+                        
+                            var html ='';
+                            var i;
+                            var notifAmount= data.length;
+                            if(data.length>0){
+                            for(i=0;i<data.length;i++){
+                                
+                                html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewNotifs/';?>'+data[i].ticketID+'">'+
+                                '<strong>New Ticket available</strong><br>'+
+                                '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
+                                'Urgency: <em>'+data[i].urgency+'</em><br>'+
+                                '<small>Cust: <em>'+data[i].customerName+'</em></small>'+
+                                ' <hr></a>';
+                                        
+                            }
+                             $('.dropdown-menu').html(html);
+                       
+                            $('.count').html(data.length);
+                        }
+                        else{
+                            html += "<p>No New Notifications</p>";
+                            $('.dropdown-menu').html(html);
+                            $('.count').html(0);
+                        }
+                    }
+                });    
+            }
+
+            
+
+            $(document).on("click", "#dropdownMenuButton", function(){
+                
+             });
+        });
+    </script>
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
@@ -33,16 +77,23 @@
                 </li>
                 
             </ul>
-            <a href ="#" class= "my-2 my-lg-0">
-                <button style="margin-right:20px">Notifications: </button>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Notifications: <span class="label label-pill label-danger count" style="border-radius:10px;"></span>
+                    </button>
+                    
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        
+                    </div>
+                </div>
 
                 <?php
-                            echo '<a href="'.base_url().'index.php/UserController/logout','">';
+                            echo '<a href="'.base_url().'index.php/UserController/logout','" style="margin-left: 3%">';
                             echo '<span class="fa fa-power-off"></span>';
                             echo '   Sign Out';
                             echo '</a>';
                 ?>
-            </a>
+            
         </div>
     </nav>
 
@@ -54,8 +105,8 @@
                         <th>ID</th>
                         <th>Token</th>
                         <th>Date Added</th>
+                        <th>Title</th>
                         <th>Customer Name</th>
-                        <th>Customer Email</th>
                         
                         <th>Product Name</th>
                         <th>Inquiry Type</th>
@@ -72,9 +123,10 @@
                                 $id = $value['ticketID'];
                                 $token = $value['token'];
                                 $dateAdded = $value['dateAdded'];
+                                $dateFinished = $value['dateCompleted'];
+                                $title = $value['ticketTitle'];
                                 $customerName = $value['customerName'];
-                                $customerEmail = $value['customerEmail'];
-                                $customerPhone = $value['customerPhone'];
+                                
                                 $productName = $value['productName'];
                                 $inquiryType = $value['inquiryType'];
                                 $urgency = $value['urgency'];
@@ -86,8 +138,9 @@
                                 echo "<td>".$id."</td>";
                                 echo "<td>".$token."</td>";
                                 echo "<td>".$dateAdded."</td>";
+                                echo "<td>".$title."</td>";
                                 echo "<td>".$customerName."</td>";
-                                echo "<td>".$customerEmail."</td>";
+                                
                                 
                                 echo "<td>".$productName."</td>";
                                 echo "<td>".$inquiryType."</td>";
@@ -101,7 +154,14 @@
                                 elseif($status==3){
                                     echo "<td><b>Closed</b></td>";
                                 }
-                                echo "<td>".$handledBy."</td>";
+                                if($handledBy == null){
+                                    echo "<td><i>";
+                                    echo "Not Yet";
+                                    echo "</i></td>";
+                                }
+                                else{
+                                    echo "<td>".$userDetails[0]->userName."</td>";
+                                }
                                 echo '<td><a class="btn btn-primary" name="btnDetail" href="'.base_url().'index.php/UserController/ticketActions/'.$value['ticketID'].'">';
                                 echo '<span class="fa fa-pencil"></span>';
                                 echo '   Actions';

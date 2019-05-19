@@ -12,28 +12,26 @@
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
-        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/UserController/dashboard','">';
+        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/SpvController/dashboard','">';
                 echo 'MMG SUPPORT'; 
                 echo '</a>'; ?>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <?php
-                        $loggedInUser = $this->session->userdata['isUserLoggedIn']['userID'];
-                        echo '<a class="nav-link" href="'.base_url().'index.php/UserController/myTickets/'.$loggedInUser.'">My Tickets</a>';
-                    ?>
+                
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Manage Users</a>
+                    </li> 
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Manage Customers</a>
+                    </li>
                 </li>
                 </ul>
-                <a href ="#" class= "my-2 my-lg-0">
-                    <button style="margin-right:20px">Notifications: </button>
-
                     <?php
-                                echo '<a href="'.base_url().'index.php/UserController/logout','">';
+                                echo '<a href="'.base_url().'index.php/SpvController/logout','">';
                                 echo '<span class="fa fa-power-off"></span>';
                                 echo '   Sign Out';
                                 echo '</a>';
                     ?>
-                </a>
             </div>
     </nav>
     <div class="container">
@@ -90,20 +88,33 @@
                 <li class="list-group-item"><?php echo "Description: ".$details[0]['description'];?></li>
                 
                 <li class="list-group-item">Screenshot: <br><?php echo '<img src="'.$details[0]['picturePath'].'" style="width:60%">'; ?> </li>
-                <?php
-                    if($details[0]['status']==1){
-                        echo '<li class="list-group-item">';
-                        echo '<a class="btn btn-primary" href="'.base_url().'index.php/UserController/takeTicket/'.$details[0]['ticketID'].'">Handle Ticket</a>';
-                        echo '</li>';
-                    }
-                    else{
-                        echo '<li class="list-group-item">';
-                        echo '<button class="btn btn-primary" disabled>Ticket Handled!</button>';
-                        echo '</li>';
-                    }
-                ?>
+                </ul>
+                    <?php
+                        echo (form_open('SpvController/delegateTicket/'.$details[0]['ticketID']));
+                        if($details[0]['userID']==null){
+                            echo '<p>Ticket Not Yet Handled</p>';
+                        }
+                    ?>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="userID">Delegate Ticket to: </label>
+                            <select name="userID" required="">
+                                <?php
+                                    foreach($availUsers as $key =>$value){
+                                        echo '<option value="'.$value['userID'].'">'.$value['userName'].'</option>';
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="delegateBtn" class="btn-primary" value="Delegate Ticket">
+                        </div>
+                    </form>
+                    <?php
+                        echo form_close();
+                    ?>
                
-            </ul>
+            
     </div>
     
 </body>
