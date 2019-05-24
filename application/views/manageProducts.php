@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Manage Customers</title>
+    <title>Manage Products</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php
         echo $js;
 		echo $css;
     ?>
     <script>
-         $(document).ready(function(){
-            $('#custList').dataTable();
-         });
+         //$(document).ready(function(){
+       //     $('#prodList').dataTable();
+        // });
     </script>
 </head>
 <body>
@@ -33,8 +33,11 @@
                                 echo '</a>'; 
                         ?>
                     </li> 
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Manage Customers <span class="sr-only">(current)</span></a>
+                    <li class="nav-item">
+                    <?php echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageCustomers">';
+                                echo 'Manage Customers'; 
+                                echo '</a>'; 
+                        ?>
                     </li> 
 
                 </ul>
@@ -47,42 +50,35 @@
                 ?>
             </div>
     </nav>
-    
+
     <div class="container bg-light">
-        <h1>All Customers</h1>
+        <h1>All Products</h1>
         <hr>
-        <?php echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/SpvController/addNewCustomer'.'">
-            <span class="fa fa-plus"></span> Add New Customer</a>';
-            echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/SpvController/manageProducts'.'">
-            <span class="fa fa-plus"></span> Manage Product</a>'; ?>
-        <table id="custList" class='table table-striped table-bordered' cellspacing='0'>
+        <?php echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/SpvController/addNewProduct'.'">
+            <span class="fa fa-plus"></span> Add New Product</a>'; ?>
+        
+        <table id="prodList" class='table table-striped table-bordered' cellspacing='0'>
 			 <thead>
                  <tr>
-                    <th>Customer ID</th>
-                    <th>Customer Username</th>
-                    <th>Customer Email</th>
-                    <th>Company Name</th>
-                    <th>Date Added</th>
-                    <th>Edit</th>
+                    <th>Product ID</th>
+                    <th>Product Name</th>
+                    <th>Customer Name</th>
+                    <th>Delete</th>
                  </tr>
              </thead>
              <tbody>
                 <?php
-                    foreach($customerData as $key => $value){
-                        $id = $value['customerID'];
-                        $username = $value['customerUsername'];
-                        $email = $value['customerEmail'];
-                        $companyName = $value['companyName'];
-                        $dateAdded = $value['dateAdded'];
+                    foreach($productData as $key => $value){
+                        $id = $value['productID'];
+                        $productName = $value['productName'];
+                        $customerName = $value['customerUsername'];
 
                         echo "<tr>";
                         echo "<td>".$id."</td>";
-                        echo "<td>".$username."</td>";
-                        echo "<td>".$email."</td>";
-                        echo "<td>".$companyName."</td>";
-                        echo "<td>".$dateAdded."</td>";
-                        echo '<td> <a class="btn btn-primary" name="btnEdit" href="'.base_url().'index.php/SpvController/editCustomer/'.$value['customerID'].'">';
-                        echo '<span class="fa fa-pencil"></span>   Edit Cust</a>';
+                        echo "<td>".$productName."</td>";
+                        echo "<td>".$customerName."</td>";
+                        echo '<td> <a class="btn btn-danger" name="btnDelete" href="'.base_url().'index.php/SpvController/deleteProduct/'.$value['productID'].'">';
+                        echo '<span class="fa fa-close"></span>   Delete Prod</a>';
                         echo "</tr>";
                     }
                 ?>

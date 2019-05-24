@@ -16,8 +16,8 @@ class SpvController extends CI_Controller {
 			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 			$data['ticketData'] = $this->SpvModel->getAllTickets();
-			$userID = $this->SpvModel->getAllTickets();
-			$data['userDetails'] = $this->SpvModel->getUserById($userID[0]['userID']);
+			//$userID = $this->SpvModel->getAllTickets();
+			//$data['userDetails'] = $this->SpvModel->getUserById($userID[0]['userID']);
 			$this->load->view('spvHome', $data);
 		}
 
@@ -83,6 +83,44 @@ class SpvController extends CI_Controller {
 				$this->session->set_flashdata('fail','Something went wrong.');
 				redirect('SpvController/editCustomer/'.$custID);
 			}
+		}
+
+		public function manageProducts(){
+			$data=array();
+			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
+			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+			$data['productData'] = $this->SpvModel->getAllProducts();
+			$this->load->view('manageProducts', $data);
+		}
+
+		public function addNewProduct(){
+			$data=array();
+			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
+			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+			$data['availCustomer'] = $this->SpvModel->getAllCustomers();
+			$this->load->view('addProduct', $data);
+		}
+
+		public function insertNewProduct(){
+			$productData = array(
+				'productName' => $this->input->post('productName'),
+				'customerID' => $this->input->post('customerID')
+			);
+
+			$result = $this->SpvModel->insertNewProduct($productData);
+
+			if($result == true){
+				$this->session->set_flashdata('success','Product Data has been added.');
+				redirect('SpvController/addNewProduct');
+			}
+			else{
+				$this->session->set_flashdata('fail','Something went wrong.');
+				redirect('SpvController/addNewProduct/');
+			}
+		}
+
+		public function deleteProduct($id){
+			$this->SpvModel->deleteProduct($id);
 		}
 
 		public function manageUsers(){

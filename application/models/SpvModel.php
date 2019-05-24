@@ -8,6 +8,7 @@ class SpvModel extends CI_Model{
     public function getAllTickets(){
         $this->db->select('*');
         $this->db->from('tickets');
+        //$this->db->join('users', 'users.userID = tickets.userID');
         $query = $this->db->get();
 
         if($query->num_rows() != 0){
@@ -290,5 +291,23 @@ class SpvModel extends CI_Model{
         else{
             return false;
         }
+    }
+
+    public function getAllProducts(){
+        $this->db->select('*');
+        $this->db->from('products');
+        $this->db->join('customers', 'customers.customerID = products.customerID');
+        $query = $this->db->get();
+        if($query->num_rows() > 0){
+            return $query->result_array();
+        }
+        else{
+            return false;
+        }
+    }
+
+    public function insertNewProduct($newData){
+        $this->db->insert('products',$newData);
+        return true;
     }
 }

@@ -24,7 +24,6 @@
                     dataType:'json',
                     success:function(data)
                     {
-                        
                             var html ='';
                             var i;
                             var notifAmount= data.length;
@@ -51,8 +50,6 @@
                     }
                 });    
             }
-
-            
 
             $(document).on("click", "#dropdownMenuButton", function(){
                 
@@ -91,10 +88,11 @@
                 </div>
             </div>
                 <?php
-                            echo '<a href="'.base_url().'index.php/UserController/logout','" style="margin-left: 3%">';
-                            echo '<span class="fa fa-power-off"></span>';
-                            echo '   Sign Out';
-                            echo '</a>';
+                    echo '<a style="color: white; margin-left: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
+                    echo '<a href="'.base_url().'index.php/UserController/logout','" style="margin-left: 3%">';
+                    echo '<span class="fa fa-power-off"></span>';
+                    echo '   Sign Out';
+                    echo '</a>';
                 ?>
         </div>
     </nav>
@@ -164,7 +162,10 @@
                                     echo "</i></td>";
                                 }
                                 else{
-                                    echo "<td>".$userDetails[0]['userName']."</td>";
+                                   
+                                        echo "<td>".$value['userID']."</td>";
+                                    
+                                    
                                 }
                                 echo '<td><a class="btn btn-primary" name="btnDetail" href="'.base_url().'index.php/UserController/ticketDetails/'.$value['ticketID'].'">';
                                 echo '<span class="fa fa-pencil"></span>';

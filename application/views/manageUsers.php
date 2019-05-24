@@ -37,6 +37,13 @@
                         ?>
                     </li>
                 </ul>
+                <?php
+                    echo '<a style="color: white; margin-left: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
+                    echo '<a href="'.base_url().'index.php/SpvController/logout','" style="margin-left: 3%">';
+                    echo '<span class="fa fa-power-off"></span>';
+                    echo '   Sign Out';
+                    echo '</a>';
+                ?>
             </div>
     </nav>
 

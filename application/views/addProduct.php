@@ -3,12 +3,17 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Add New Customer</title>
+    <title>Add New Product</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php
         echo $js;
 		echo $css;
     ?>
+    <script>
+         //$(document).ready(function(){
+       //     $('#prodList').dataTable();
+        // });
+    </script>
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
@@ -23,12 +28,13 @@
                         ?>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Manage Users</a>
+                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageUsers">';
+                                echo 'Manage Users'; 
+                                echo '</a>'; 
+                        ?>
                     </li> 
                     <li class="nav-item">
-                        <?php 
-                            echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageCustomers">Manage Customers</a>';
-                        ?>
+                        <a class="nav-link" href="#">Manage Customers</span></a>
                     </li> 
 
                 </ul>
@@ -43,7 +49,7 @@
     </nav>
 
     <div class="container" style="margin-top: 2%;">
-    <h1>Add New Customer Data</h1>
+    <h1>Add New Product Data</h1>
     <?php
         if($this->session->flashdata('success')!=null){
             echo '<p style="color:blue">'.$this->session->flashdata('success').'</p>';
@@ -52,28 +58,25 @@
             echo '<p style="color:red">'.$this->session->flashdata('fail').'</p>';
         }
     ?>
+    <?php echo '<a class="btn btn-primary" style="margin:2px" a href="'.base_url().'index.php/SpvController/manageProducts'.'">
+            <span class="fa fa-arrow-left"></span> Back</a>'; ?>
 	<hr>
-     <?php echo form_open('SpvController/insertNewCustomer'); ?>
+     <?php echo form_open('SpvController/insertNewProduct'); ?>
         <form action="" method="post">
             <div class="form-group">
-                <label for="name">Customer Username</label>
-                <input type="text" class="form-control" name="username" required="">
+                <label for="productName">Product Name</label>
+                <input type="text" class="form-control" name="productName" required="">
                 <?php echo form_error('name','<span class="help-block">','</span>'); ?>
             </div>
             <div class="form-group">
-                <label for="email">Customer Email</label>
-                <input type="email" class="form-control" name="email" required="" >
-                <?php echo form_error('email','<span class="help-block">','</span>'); ?>
-            </div>
-            <div class="form-group">
-                <label for="companyName">Company Name</label>
-                <input type="text" class="form-control" name="companyName" required="" >
-                <?php echo form_error('companyName','<span class="help-block">','</span>'); ?>
-            </div>
-            <div class="form-group">
-                <label for="password">User Password</label>
-                <input type="password" class="form-control" name="password" required="" >
-                <?php echo form_error('password','<span class="help-block">','</span>'); ?>
+                <label for="customerID">Product belong to: </label>
+                     <select name="customerID" required="">
+                        <?php
+                            foreach($availCustomer as $key =>$value){
+                                echo '<option value="'.$value['customerID'].'">'.$value['customerName'].'</option>';
+                            }
+                        ?>                           
+                    </select>
             </div>
             <div class="form-group">
                 <input type="submit" name="confirm" class="btn btn-primary" value="Submit"/>

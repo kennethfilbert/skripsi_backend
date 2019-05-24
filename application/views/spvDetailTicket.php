@@ -80,7 +80,7 @@
                             echo "</i>";
                         }
                         else{
-                            echo $userDetails[0]->userName;
+                            echo $userDetails[0]['userName'];
                         }
 
                     ?>

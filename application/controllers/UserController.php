@@ -25,8 +25,8 @@ class UserController extends CI_Controller {
 		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 		$data['ticketData'] = $this->UserModel->getAllTickets();
-		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
-		$data['userDetails'] = $this->UserModel->getUserById($userID);
+	
+		//$data['userDetails'] = $this->UserModel->getUserName();
 		
 		$this->load->view('home', $data);
 	}
@@ -41,13 +41,11 @@ class UserController extends CI_Controller {
 		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 		$data['details'] = $this->UserModel->getTicketById($ticketID);
-		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
-		$data['userDetails'] = $this->UserModel->getUserById($userID);
+		//$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+		//$data['userDetails'] = $this->UserModel->getUserById($userID);
 		$data['notifData'] = $this->UserModel->viewNotification($ticketID);
 		
 		$this->load->view('detailTicket', $data);
-		
-		//echo json_encode($notifData, JSON_PRETTY_PRINT);
 	}
 
 	public function myTickets($userID){
@@ -55,8 +53,7 @@ class UserController extends CI_Controller {
 		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 		$data['ticketData'] = $this->UserModel->getTicketByUserId($userID);
-		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
-		$data['userDetails'] = $this->UserModel->getUserById($userID);
+		//$data['userDetails'] = $this->UserModel->getUserById($userID);
 		
 		$this->load->view('myTickets', $data);
 	}
@@ -109,7 +106,8 @@ class UserController extends CI_Controller {
 					$loggedInUser = $sessionData;	
 					$data['loggedInUser'] = $sessionData;
 					$data['ticketData'] = $this->UserModel->getAllTickets();
-					$data['userDetails'] = $this->UserModel->getUserById($result[0]['userID']);
+					//$data['userDetails'] = $this->UserModel->getUserName();
+					//$data['userDetails'] = $this->UserModel->getUserById($result[0]['userID']);
 					//$data['success_msg'] = 'Welcome, '.$result[0]->customerUsername.'!';
 					if($result[0]['userLevel'] == 2){
 						$this->load->view('home', $data);
@@ -137,8 +135,8 @@ class UserController extends CI_Controller {
 		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 		$data['details'] = $this->UserModel->getTicketById($ticketID);
-		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
-		$data['userDetails'] = $this->UserModel->getUserById($userID);
+		$userID = $this->UserModel->getTicketById($ticketID);
+		$data['userDetails'] = $this->UserModel->getUserById($userID[0]['userID']);
 		
 		$this->load->view('detailTicket', $data);
 	}
@@ -158,11 +156,15 @@ class UserController extends CI_Controller {
 		
 		
 		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+
+		date_default_timezone_set('Asia/Jakarta'); 	
+		$date = date('Y-m-d H:i:s');
 		
 		$emailDetails = $this->UserModel->getTicketById($ticketID);
 		$ticketData = array(
 			
-			'status' => $this->input->post('status')
+			'status' => $this->input->post('status'),
+			'dateUpdated' => $date
 		);
 		$changelogData = array(
 			'ticketID' => $ticketID,

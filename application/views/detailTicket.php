@@ -9,31 +9,80 @@
         echo $js;
 		echo $css;
     ?>
+    <script>
+        show_notifications();
+
+        function show_notifications(){
+            $.ajax({
+                type: 'ajax',
+                url:<?php echo '"'.base_url().'index.php/UserController/loadNotifs'.'"'?>,
+                async: true,
+                dataType:'json',
+                success:function(data)
+                {
+                        var html ='';
+                        var i;
+                        var notifAmount= data.length;
+                        if(data.length>0){
+                        for(i=0;i<data.length;i++){
+                            
+                            html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewNotifs/';?>'+data[i].ticketID+'">'+
+                            '<strong>New Ticket available</strong><br>'+
+                            '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
+                            'Urgency: <em>'+data[i].urgency+'</em><br>'+
+                            '<small>Cust: <em>'+data[i].customerName+'</em></small>'+
+                            ' <hr></a>';
+                                    
+                        }
+                        $('.dropdown-menu').html(html);
+                
+                        $('.count').html(data.length);
+                    }
+                    else{
+                        html += "<p>No New Notifications</p>";
+                        $('.dropdown-menu').html(html);
+                        $('.count').html(0);
+                    }
+                }
+            });    
+        }
+        
+        $(document).on("click", "#dropdownMenuButton", function(){
+            
+        });
+    </script>
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
         <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/UserController/dashboard','">';
                 echo 'MMG SUPPORT'; 
                 echo '</a>'; ?>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <?php
+                            $loggedInUser = $this->session->userdata['isUserLoggedIn']['userID'];
+                            echo '<a class="nav-link" href="'.base_url().'index.php/UserController/myTickets/'.$loggedInUser.'">My Tickets</a>';
+                        ?>
+                    </li>
+                    </ul>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Notifications: <span class="label label-pill label-danger count" style="border-radius:10px;"></span>
+                        </button>
+                        
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        
+                    </div>
+                </div>
                     <?php
-                        $loggedInUser = $this->session->userdata['isUserLoggedIn']['userID'];
-                        echo '<a class="nav-link" href="'.base_url().'index.php/UserController/myTickets/'.$loggedInUser.'">My Tickets</a>';
+                        echo '<a style="color: white; margin-left: 1%; margin-right: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
+                        echo '<a href="'.base_url().'index.php/UserController/logout','">';
+                        echo '<span class="fa fa-power-off"></span>';
+                        echo '   Sign Out';
+                        echo '</a>';
                     ?>
-                </li>
-                </ul>
-                <a href ="#" class= "my-2 my-lg-0">
-                    <button style="margin-right:20px">Notifications: </button>
-
-                    <?php
-                                echo '<a href="'.base_url().'index.php/UserController/logout','">';
-                                echo '<span class="fa fa-power-off"></span>';
-                                echo '   Sign Out';
-                                echo '</a>';
-                    ?>
-                </a>
+                
             </div>
     </nav>
     <div class="container">
@@ -82,11 +131,12 @@
                             echo "</i>";
                         }
                         else{
-                            echo $userDetails[0]->userName;
+                            echo $userDetails[0]['userName'];
                         }
 
                     ?>
                 </li>
+                <li class="list-group-item"><?php echo "Date Updated: ".$details[0]['dateUpdated'];?></li>
                 <li class="list-group-item"><?php echo "Description: ".$details[0]['description'];?></li>
                 
                 <li class="list-group-item">Screenshot: <br><?php echo '<img src="'.$details[0]['picturePath'].'" style="width:60%">'; ?> </li>

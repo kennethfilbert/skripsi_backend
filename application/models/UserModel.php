@@ -6,6 +6,28 @@ class UserModel extends CI_Model{
     }
     
     //USERS
+
+    public function getAllUsers(){
+        $this->db->select('*');
+        $this->db->from('users');
+        $query = $this->db->get();
+        if($query->num_rows() > 0){
+            return $query->result_array();
+        }
+        else{
+            return false;
+        }
+    }
+
+    public function getUserName(){
+        $this->db->select('*');
+		$this->db->from('users');
+		$this->db->join('tickets', 'tickets.userID = users.userID');
+		$query = $this->db->get();
+
+		return $query->result_array();
+    }
+
     public function getUserInfo($name){
         $this->db->select('*');
         $this->db->from('users');
@@ -56,19 +78,16 @@ class UserModel extends CI_Model{
     public function getAllTickets(){
         $this->db->select('*');
         $this->db->from('tickets');
+        //$this->db->join('users', 'users.userID = tickets.userID');
         $query = $this->db->get();
 
-        if($query->num_rows() != 0){
-            return $query->result_array();
-        }
-        else{
-            return false;
-        }
+        return $query->result_array();
     }
 
     public function getTicketById($id){
         $this->db->select('*');
         $this->db->from('tickets');
+        //$this->db->join('users', 'users.userID = tickets.userID');
         $this->db->where('ticketID', $id);
         $query = $this->db->get();
 
@@ -83,7 +102,8 @@ class UserModel extends CI_Model{
     public function getTicketByUserId($id){
         $this->db->select('*');
         $this->db->from('tickets');
-        $this->db->where('userID', $id);
+        $this->db->join('users', 'users.userID = tickets.userID');
+        $this->db->where('tickets.userID', $id);
         $query = $this->db->get();
 
         if($query->num_rows() != 0){
@@ -218,13 +238,31 @@ class UserModel extends CI_Model{
         			</div>
         		</body>
                 </html>";
+                $config = array(
+        			'protocol' => 'smtp',
+        			'smtp_host' => 'ssl://smtp.googlemail.com',
+        			'smtp_port' => 465,
+        			'smtp_user' => 'kennethfilbert343@gmail.com',
+        			'smtp_pass' => 'HAUNtings',
+        			'mailtype' => 'html',
+        			'charset' => 'iso-8859-1',
+        			'wordwrap' => TRUE
+        		);
+
+        		$this->email->initialize($config);
+        		$this->email->set_mailtype("html");
+        		$this->email->set_newline("\r\n");
+
+        		$this->email->to($emailData['customerEmail']);
+        		$this->email->from('support@mmg.com','Mitra Mentari Global');
+        		$this->email->subject($subject);
+        		$this->email->message($message);
+
+        				//Send email
+        		$this->email->send();
+        		$this->load->library('encrypt');
             }
             elseif($changelogData['status']==3){
-                $dateCompleted = array(
-                   'dateCompleted' => date('Y M d H:i:s')
-                );
-                $this->db->insert('tickets', $dateCompleted);
-                
                 $subject = "Your Support Ticket's status has been completed";
                 $message = "
         			<html>
@@ -288,8 +326,6 @@ class UserModel extends CI_Model{
         			</div>
         		</body>
                 </html>";
-            }
-
                 $config = array(
         			'protocol' => 'smtp',
         			'smtp_host' => 'ssl://smtp.googlemail.com',
@@ -313,6 +349,7 @@ class UserModel extends CI_Model{
         				//Send email
         		$this->email->send();
         		$this->load->library('encrypt');
+            }
 
             return true;
         }

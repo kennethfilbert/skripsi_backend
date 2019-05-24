@@ -23,7 +23,6 @@
                     dataType:'json',
                     success:function(data)
                     {
-                        
                             var html ='';
                             var i;
                             var notifAmount= data.length;
@@ -50,8 +49,6 @@
                     }
                 });    
             }
-
-            
 
             $(document).on("click", "#dropdownMenuButton", function(){
                 
@@ -88,10 +85,11 @@
                 </div>
 
                 <?php
-                            echo '<a href="'.base_url().'index.php/UserController/logout','" style="margin-left: 3%">';
-                            echo '<span class="fa fa-power-off"></span>';
-                            echo '   Sign Out';
-                            echo '</a>';
+                    echo '<a style="color: white; margin-left: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
+                    echo '<a href="'.base_url().'index.php/UserController/logout','" style="margin-left: 3%">';
+                    echo '<span class="fa fa-power-off"></span>';
+                    echo '    Sign Out';
+                    echo '</a>';
                 ?>
             
         </div>
@@ -119,57 +117,63 @@
                     </thead>
                     <tbody>
                         <?php 
-                            foreach($ticketData as $key => $value){
-                                $id = $value['ticketID'];
-                                $token = $value['token'];
-                                $dateAdded = $value['dateAdded'];
-                                $dateFinished = $value['dateCompleted'];
-                                $title = $value['ticketTitle'];
-                                $customerName = $value['customerName'];
-                                
-                                $productName = $value['productName'];
-                                $inquiryType = $value['inquiryType'];
-                                $urgency = $value['urgency'];
-                                $description = $value['description'];
-                                $status = $value['status'];
-                                $handledBy = $value['userID'];
-
-                                echo "<tr>";
-                                echo "<td>".$id."</td>";
-                                echo "<td>".$token."</td>";
-                                echo "<td>".$dateAdded."</td>";
-                                echo "<td>".$title."</td>";
-                                echo "<td>".$customerName."</td>";
-                                
-                                
-                                echo "<td>".$productName."</td>";
-                                echo "<td>".$inquiryType."</td>";
-                                echo "<td>".$urgency."</td>";
-                                if($status==1){
-                                    echo "<td><b>Open</b></td>";
-                                }
-                                elseif($status==2){
-                                    echo "<td><b>Ongoing</b></td>";
-                                }
-                                elseif($status==3){
-                                    echo "<td><b>Closed</b></td>";
-                                }
-                                if($handledBy == null){
-                                    echo "<td><i>";
-                                    echo "Not Yet";
-                                    echo "</i></td>";
-                                }
-                                else{
-                                    echo "<td>".$userDetails[0]->userName."</td>";
-                                }
-                                echo '<td><a class="btn btn-primary" name="btnDetail" href="'.base_url().'index.php/UserController/ticketActions/'.$value['ticketID'].'">';
-                                echo '<span class="fa fa-pencil"></span>';
-                                echo '   Actions';
-                                echo '</a></td>';
-                                
-                                echo "</tr>";
+                            if($ticketData==null){
 
                             }
+                            else{
+                                foreach($ticketData as $key => $value){
+                                    $id = $value['ticketID'];
+                                    $token = $value['token'];
+                                    $dateAdded = $value['dateAdded'];
+                                    $dateFinished = $value['dateUpdated'];
+                                    $title = $value['ticketTitle'];
+                                    $customerName = $value['customerName'];
+                                    
+                                    $productName = $value['productName'];
+                                    $inquiryType = $value['inquiryType'];
+                                    $urgency = $value['urgency'];
+                                    $description = $value['description'];
+                                    $status = $value['status'];
+                                    $handledBy = $value['userID'];
+    
+                                    echo "<tr>";
+                                    echo "<td>".$id."</td>";
+                                    echo "<td>".$token."</td>";
+                                    echo "<td>".$dateAdded."</td>";
+                                    echo "<td>".$title."</td>";
+                                    echo "<td>".$customerName."</td>";
+                                    
+                                    
+                                    echo "<td>".$productName."</td>";
+                                    echo "<td>".$inquiryType."</td>";
+                                    echo "<td>".$urgency."</td>";
+                                    if($status==1){
+                                        echo "<td><b>Open</b></td>";
+                                    }
+                                    elseif($status==2){
+                                        echo "<td><b>Ongoing</b></td>";
+                                    }
+                                    elseif($status==3){
+                                        echo "<td><b>Closed</b></td>";
+                                    }
+                                    if($handledBy == null){
+                                        echo "<td><i>";
+                                        echo "Not Yet";
+                                        echo "</i></td>";
+                                    }
+                                    else{
+                                        echo "<td>".$value['userName']."</td>";
+                                    }
+                                    echo '<td><a class="btn btn-primary" name="btnDetail" href="'.base_url().'index.php/UserController/ticketActions/'.$value['ticketID'].'">';
+                                    echo '<span class="fa fa-pencil"></span>';
+                                    echo '   Actions';
+                                    echo '</a></td>';
+                                    
+                                    echo "</tr>";
+    
+                                }
+                            }
+                            
                         ?>
                     </tbody>
                 </table>
