@@ -209,13 +209,71 @@ class SpvController extends CI_Controller {
 
 		public function delegateTicket($ticketID){
 			$userID = $this->input->post('userID');
-			$result = $this->SpvModel->delegateTicket($ticketID, $userID);
+			$spvName = $this->session->userdata['isUserLoggedIn']['userName'];
+			$result = $this->SpvModel->delegateTicket($ticketID, $userID, $spvName);
 
 			if($result == true){
 				$this->session->set_flashdata('success','Ticket has been delegated to the user.');
 				
 				redirect('SpvController/spvTicketDetails/'.$ticketID);
 			}
+		}
+
+		public function exportXls(){
+			
+			$this->load->library('excel');
+			$ticketInfo = $this->SpvModel->getAllTickets();
+			
+			$this->excel->setActiveSheetIndex(0);
+			//header
+			$this->excel->getActiveSheet()->SetCellValue('A1','Ticket ID');
+			$this->excel->getActiveSheet()->SetCellValue('B1','Token');
+			$this->excel->getActiveSheet()->SetCellValue('C1','Date Added');
+			$this->excel->getActiveSheet()->SetCellValue('D1','Title');
+			$this->excel->getActiveSheet()->SetCellValue('E1','Customer Name');
+			$this->excel->getActiveSheet()->SetCellValue('F1','Customer Email');
+			$this->excel->getActiveSheet()->SetCellValue('G1','Customer Phone');
+			$this->excel->getActiveSheet()->SetCellValue('H1','Product Name');
+			$this->excel->getActiveSheet()->SetCellValue('I1','Inquiry Type');
+			$this->excel->getActiveSheet()->SetCellValue('J1','Urgency');
+			$this->excel->getActiveSheet()->SetCellValue('K1','Status');
+			$this->excel->getActiveSheet()->SetCellValue('L1','Handled By (ID)');
+			$this->excel->getActiveSheet()->SetCellValue('M1','Last Updated');
+			$this->excel->getActiveSheet()->SetCellValue('N1','Description');
+			$this->excel->getActiveSheet()->SetCellValue('O1','Feedback');
+			$this->excel->getActiveSheet()->SetCellValue('P1','Approval');
+			//row
+			$rowCount = 2;
+			foreach($ticketInfo as $element){
+				$this->excel->getActiveSheet()->SetCellValue('A'.$rowCount, $element['ticketID']);
+				$this->excel->getActiveSheet()->SetCellValue('B'.$rowCount, $element['token']);
+				$this->excel->getActiveSheet()->SetCellValue('C'.$rowCount, $element['dateAdded']);
+				$this->excel->getActiveSheet()->SetCellValue('D'.$rowCount, $element['ticketTitle']);
+				$this->excel->getActiveSheet()->SetCellValue('E'.$rowCount, $element['customerName']);
+				$this->excel->getActiveSheet()->SetCellValue('F'.$rowCount, $element['customerEmail']);
+				$this->excel->getActiveSheet()->SetCellValue('G'.$rowCount, $element['customerPhone']);
+				$this->excel->getActiveSheet()->SetCellValue('H'.$rowCount, $element['productName']);
+				$this->excel->getActiveSheet()->SetCellValue('I'.$rowCount, $element['inquiryType']);
+				$this->excel->getActiveSheet()->SetCellValue('J'.$rowCount, $element['urgency']);
+				$this->excel->getActiveSheet()->SetCellValue('K'.$rowCount, $element['status']);
+				$this->excel->getActiveSheet()->SetCellValue('L'.$rowCount, $element['userID']);
+				$this->excel->getActiveSheet()->SetCellValue('M'.$rowCount, $element['dateUpdated']);
+				$this->excel->getActiveSheet()->SetCellValue('N'.$rowCount, $element['description']);
+				$this->excel->getActiveSheet()->SetCellValue('O'.$rowCount, $element['feedback']);
+				$this->excel->getActiveSheet()->SetCellValue('P'.$rowCount, $element['approved']);
+				$rowCount++;
+			}
+			//$this->excel->getActiveSheet()->fromArray($ticketInfo);
+			$filename = 'data-'.time().'.xlsx';
+			header('Content-Disposition: attachment;filename="'.$filename.'"');
+			header("Content-Type: application/vnd.ms-excel");
+			header('Cache-Control: max-age=0');
+			
+			//$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+			$objWriter->save('php://output');
+			
+
 		}
     
     

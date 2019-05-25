@@ -85,6 +85,7 @@
 
                     ?>
                 </li>
+                <li class="list-group-item"><?php echo "Date Updated: ".$details[0]['dateUpdated'];?></li>
                 <li class="list-group-item"><?php echo "Description: ".$details[0]['description'];?></li>
                 
                 <li class="list-group-item">Screenshot: <br><?php echo '<img src="'.$details[0]['picturePath'].'" style="width:60%">'; ?> </li>

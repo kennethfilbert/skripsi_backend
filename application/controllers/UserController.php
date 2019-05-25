@@ -41,8 +41,8 @@ class UserController extends CI_Controller {
 		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 		$data['details'] = $this->UserModel->getTicketById($ticketID);
-		//$userID = $this->session->userdata['isUserLoggedIn']['userID'];
-		//$data['userDetails'] = $this->UserModel->getUserById($userID);
+		$userID = $this->UserModel->getTicketById($ticketID);
+		$data['userDetails'] = $this->UserModel->getUserById($userID[0]['userID']);
 		$data['notifData'] = $this->UserModel->viewNotification($ticketID);
 		
 		$this->load->view('detailTicket', $data);

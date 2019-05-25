@@ -52,6 +52,12 @@
 
     <div class="container">
         <h1>All Tickets</h1>
+        <?php
+            echo '<a class="btn btn-primary" href="'.base_url().'index.php/SpvController/exportXls">';
+            echo 'Export to Excel'; 
+            echo '</a>';
+        ?>
+        <hr>
         <table id="ticketList" class='table table-striped table-bordered'>
 			        <thead>
 				    <tr>

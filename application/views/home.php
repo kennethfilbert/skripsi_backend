@@ -28,16 +28,17 @@
                             var i;
                             var notifAmount= data.length;
                             if(data.length>0){
-                            for(i=0;i<data.length;i++){
-                                
-                                html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewNotifs/';?>'+data[i].ticketID+'">'+
-                                '<strong>New Ticket available</strong><br>'+
-                                '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
-                                'Urgency: <em>'+data[i].urgency+'</em><br>'+
-                                '<small>Cust: <em>'+data[i].customerName+'</em></small>'+
-                                ' <hr></a>';
-                                        
-                            }
+                                for(i=0;i<data.length;i++){
+                                    
+                                    html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewNotifs/';?>'+data[i].ticketID+'">'+
+                                    '<strong>New Ticket available</strong><br>'+
+                                    '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
+                                    'Urgency: <em>'+data[i].urgency+'</em><br>'+
+                                    '<small>Cust: <em>'+data[i].customerName+'</em></small><br>'+
+                                    '<small>Delegated By: <em>'+data[i].delegatedBy+'</em></small>'+
+                                    ' <hr></a>';
+                                            
+                                }
                              $('.dropdown-menu').html(html);
                        
                             $('.count').html(data.length);

@@ -33,9 +33,11 @@ class SpvModel extends CI_Model{
         }
     }
 
-    public function delegateTicket($ticketID, $userID){
+    public function delegateTicket($ticketID, $userID, $spvName){
         $newData = array(
-            'userID' => $userID
+            'userID' => $userID,
+            'delegatedNotif' => 1,
+            'delegatedBy' => $spvName
         );
         $this->db->set($newData);
 		$this->db->where('ticketID', $ticketID);
