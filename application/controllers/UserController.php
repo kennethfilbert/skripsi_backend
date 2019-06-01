@@ -32,7 +32,14 @@ class UserController extends CI_Controller {
 	}
 
 	public function loadNotifs(){
-		$notifData = $this->UserModel->getNotification();
+		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+		$notifData = $this->UserModel->getNotification($userID);
+		echo json_encode($notifData, JSON_PRETTY_PRINT);
+	}
+
+	public function loadFeedbackNotifs(){
+		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+		$notifData = $this->UserModel->getFeedbackNotification($userID);
 		echo json_encode($notifData, JSON_PRETTY_PRINT);
 	}
 
@@ -43,7 +50,19 @@ class UserController extends CI_Controller {
 		$data['details'] = $this->UserModel->getTicketById($ticketID);
 		$userID = $this->UserModel->getTicketById($ticketID);
 		$data['userDetails'] = $this->UserModel->getUserById($userID[0]['userID']);
-		$data['notifData'] = $this->UserModel->viewNotification($ticketID);
+		
+		
+		$this->load->view('detailTicket', $data);
+	}
+
+	public function viewFeedbackNotifs($ticketID){
+		$data = array();
+		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
+		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+		$data['details'] = $this->UserModel->getTicketById($ticketID);
+		$userID = $this->UserModel->getTicketById($ticketID);
+		$data['userDetails'] = $this->UserModel->getUserById($userID[0]['userID']);
+		$data['notifData'] = $this->UserModel->viewFeedbackNotification($ticketID);
 		
 		$this->load->view('detailTicket', $data);
 	}
@@ -115,6 +134,9 @@ class UserController extends CI_Controller {
 					elseif($result[0]['userLevel'] == 1){
 						$this->load->view('spvHome', $data);
 					}
+					elseif($result[0]['userLevel'] == 0){
+						$this->load->view('adminDashboard', $data);
+					}
 					
 		}
 		else if($result==false){
@@ -145,6 +167,7 @@ class UserController extends CI_Controller {
 		
 		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
 		$result = $this->UserModel->handleTicket($ticketID, $userID);
+		
 
 		if($result==true){
 			$this->session->set_flashdata('success','Ticket added to your Ticket List.');

@@ -11,48 +11,86 @@
     ?>
     <script>
         show_notifications();
+            show_feedback_notifications();
 
-        function show_notifications(){
-            $.ajax({
-                type: 'ajax',
-                url:<?php echo '"'.base_url().'index.php/UserController/loadNotifs'.'"'?>,
-                async: true,
-                dataType:'json',
-                success:function(data)
-                {
-                        var html ='';
-                        var i;
-                        var notifAmount= data.length;
-                        if(data.length>0){
-                        for(i=0;i<data.length;i++){
-                            
-                            html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewNotifs/';?>'+data[i].ticketID+'">'+
-                            '<strong>New Ticket available</strong><br>'+
-                            '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
-                            'Urgency: <em>'+data[i].urgency+'</em><br>'+
-                            '<small>Cust: <em>'+data[i].customerName+'</em></small>'+
-                            ' <hr></a>';
+            function show_notifications(){
+                $.ajax({
+                    type: 'ajax',
+                    url:<?php echo '"'.base_url().'index.php/UserController/loadNotifs'.'"'?>,
+                    async: true,
+                    dataType:'json',
+                    success:function(data)
+                    {
+                            var html ='';
+                            var i;
+                            var notifAmount= data.length;
+                            if(data.length>0){
+                                for(i=0;i<data.length;i++){
                                     
+                                    html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewNotifs/';?>'+data[i].ticketID+'">'+
+                                    '<strong>New Ticket available</strong><br>'+
+                                    '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
+                                    'Urgency: <em>'+data[i].urgency+'</em><br>'+
+                                    '<small>Cust: <em>'+data[i].customerName+'</em></small><br>'+
+                                    '<small>Delegated By: <em>'+data[i].delegatedBy+'</em></small>'+
+                                    ' <hr></a>';
+                                            
+                                }
+                             $('#ticket-list').html(html);
+                       
+                            $('#ticket-count').html(data.length);
                         }
-                        $('.dropdown-menu').html(html);
-                
-                        $('.count').html(data.length);
+                        else{
+                            html += "<p>No New Notifications</p>";
+                            $('#ticket-list').html(html);
+                            $('#ticket-count').html(0);
+                        }
                     }
-                    else{
-                        html += "<p>No New Notifications</p>";
-                        $('.dropdown-menu').html(html);
-                        $('.count').html(0);
+                });    
+            }
+
+            function show_feedback_notifications(){
+                $.ajax({
+                    type: 'ajax',
+                    url:<?php echo '"'.base_url().'index.php/UserController/loadFeedbackNotifs'.'"'?>,
+                    async: true,
+                    dataType:'json',
+                    success:function(data)
+                    {
+                            var html ='';
+                            var i;
+                            var notifAmount= data.length;
+                            if(data.length>0){
+                                for(i=0;i<data.length;i++){
+                                    
+                                    html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewFeedbackNotifs/';?>'+data[i].ticketID+'">'+
+                                    '<strong>New Feedback Received</strong><br>'+
+                                    '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
+                                    'Urgency: <em>'+data[i].urgency+'</em><br>'+
+                                    '<small>Cust: <em>'+data[i].customerName+'</em></small><br>'+
+                                    '<small>Approved: <em>'+data[i].approved+'</em></small><br>'+
+                                    ' <hr></a>';
+                                            
+                                }
+                             $('#feedback-list').html(html);
+                       
+                            $('#feedback-count').html(data.length);
+                        }
+                        else{
+                            html += "<p>No New Notifications</p>";
+                            $('#feedback-list').html(html);
+                            $('.feedback-count').html(0);
+                        }
                     }
-                }
-            });    
-        }
+                });    
+            }
         
         $(document).on("click", "#dropdownMenuButton", function(){
             
         });
     </script>
 </head>
-<body>
+<body class="backgrnd">
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
         <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/UserController/dashboard','">';
                 echo 'MMG SUPPORT'; 
@@ -68,11 +106,12 @@
                     </ul>
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Notifications: <span class="label label-pill label-danger count" style="border-radius:10px;"></span>
+                            New Tickets: <span class="label label-pill label-danger" id="ticket-count" style="border-radius:10px;"></span>
                         </button>
                         
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        
+                        <div class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton" id="ticket-list">
+                            
+                        </div>
                     </div>
                 </div>
                     <?php
@@ -85,8 +124,18 @@
                 
             </div>
     </nav>
-    <div class="container">
+    <div class="container bg-light">
         <h1>Ticket Details</h1>
+        <hr>
+            <div class="dropdown" style="margin-bottom:3%">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    New Feedbacks: <span class="label label-pill label-danger" id="feedback-count" style="border-radius:10px;"></span>
+                </button>
+                
+                <div class="feedback-dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton" id="feedback-list">
+                    
+                </div>
+            </div>
             <?php
                 /*if(!empty($success_msg)){
                     echo '<div style="color: blue;"
@@ -138,6 +187,13 @@
                 </li>
                 <li class="list-group-item"><?php echo "Date Updated: ".$details[0]['dateUpdated'];?></li>
                 <li class="list-group-item"><?php echo "Description: ".$details[0]['description'];?></li>
+                <li class="list-group-item"><?php 
+                    if($details[0]['approved']==1)
+                        echo "Approved: Yes";
+                    else 
+                        echo "Approved: No";
+                ?></li>
+                <li class="list-group-item"><?php echo "Feedback: ".$details[0]['feedback'];?></li>
                 
                 <li class="list-group-item">Screenshot: <br><?php echo '<img src="'.$details[0]['picturePath'].'" style="width:60%">'; ?> </li>
                 <?php

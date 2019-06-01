@@ -118,7 +118,9 @@ class UserModel extends CI_Model{
     public function handleTicket($ticketID, $userID){
         $newData = array(
             'userID' => $userID,
-            'status' => 2
+            'status' => 2,
+            'notificationSeen' => 1,
+            'delegatedNotif' => 0
         );
         $this->db->set($newData);
 		$this->db->where('ticketID', $ticketID);
@@ -359,8 +361,10 @@ class UserModel extends CI_Model{
         }
     }
 
-    public function getNotification(){
-        $condition  = "notificationSeen = 0 OR delegatedNotif = 1";
+    //NOTIFS
+
+    public function getNotification($userID){
+        $condition  = "notificationSeen = 0 OR delegatedNotif = 1 OR delegatedTo = "."'".$userID."'";
         $this->db->select('*');
         $this->db->from('tickets');
         $this->db->where($condition);
@@ -374,11 +378,43 @@ class UserModel extends CI_Model{
         }
     }
 
-    public function viewNotification($ticketID){
+    public function getFeedbackNotification($userID){
+        $condition  = "feedbackNotifSeen = 0 AND userID = "."'".$userID."'";
+        $this->db->select('*');
+        $this->db->from('tickets');
+        $this->db->where($condition);
+        $query = $this->db->get();
+
+        if($query->num_rows() != 0){
+            return $query->result();  
+        }
+        else{
+            return false;
+        }
+    }
+
+    /*public function viewNotification($ticketID){
         $condition = "notificationSeen = 0 AND ticketID = "."'".$ticketID."'";
             $ticketData = array(
                 'notificationSeen' => 1,
                 'delegatedNotif' => 0
+            );
+            $this->db->set($ticketData);
+            $this->db->where($condition);
+            $this->db->update('tickets');
+            //$this->db->limit(1);
+        if($this->db->affected_rows() > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }*/
+
+    public function viewFeedbackNotification($ticketID){
+        $condition = "feedbackNotifSeen = 0 AND ticketID = "."'".$ticketID."'";
+            $ticketData = array(
+                'feedbackNotifSeen' => 1
             );
             $this->db->set($ticketData);
             $this->db->where($condition);

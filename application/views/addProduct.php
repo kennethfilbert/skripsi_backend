@@ -17,18 +17,18 @@
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
-        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/SpvController/dashboard'.'">';
+        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/AdminController/dashboard'.'">';
                 echo 'MMG SUPPORT'; 
                 echo '</a>'; ?>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <?php 
-                            echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/dashboard">Home</a>';
+                            echo '<a class="nav-link" href="'.base_url().'index.php/AdminController/dashboard">Home</a>';
                         ?>
                     </li>
                     <li class="nav-item">
-                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageUsers">';
+                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/AdminController/manageUsers">';
                                 echo 'Manage Users'; 
                                 echo '</a>'; 
                         ?>
@@ -40,7 +40,7 @@
                 </ul>
                 <?php
                     echo '<a style="color: white; margin-left: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
-                    echo '<a href="'.base_url().'index.php/SpvController/logout','" style="margin-left: 3%">';
+                    echo '<a href="'.base_url().'index.php/AdminController/logout','" style="margin-left: 3%">';
                     echo '<span class="fa fa-power-off"></span>';
                     echo '   Sign Out';
                     echo '</a>';
@@ -58,10 +58,10 @@
             echo '<p style="color:red">'.$this->session->flashdata('fail').'</p>';
         }
     ?>
-    <?php echo '<a class="btn btn-primary" style="margin:2px" a href="'.base_url().'index.php/SpvController/manageProducts'.'">
+    <?php echo '<a class="btn btn-primary" style="margin:2px" a href="'.base_url().'index.php/AdminController/manageProducts'.'">
             <span class="fa fa-arrow-left"></span> Back</a>'; ?>
 	<hr>
-     <?php echo form_open('SpvController/insertNewProduct'); ?>
+     <?php echo form_open('AdminController/insertNewProduct'); ?>
         <form action="" method="post">
             <div class="form-group">
                 <label for="productName">Product Name</label>
@@ -73,7 +73,7 @@
                      <select name="customerID" required="">
                         <?php
                             foreach($availCustomer as $key =>$value){
-                                echo '<option value="'.$value['customerID'].'">'.$value['customerName'].'</option>';
+                                echo '<option value="'.$value['customerID'].'">'.$value['customerUsername'].'</option>';
                             }
                         ?>                           
                     </select>

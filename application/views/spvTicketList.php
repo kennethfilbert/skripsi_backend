@@ -10,7 +10,7 @@
 		echo $css;
     ?>
     <script>
-        $(document).ready(function(){
+         $(document).ready(function(){
             $('#ticketList').dataTable();
 
             show_notifications();
@@ -19,7 +19,7 @@
             function show_notifications(){
                 $.ajax({
                     type: 'ajax',
-                    url:<?php echo '"'.base_url().'index.php/UserController/loadNotifs'.'"'?>,
+                    url:<?php echo '"'.base_url().'index.php/SpvController/loadNotifs'.'"'?>,
                     async: true,
                     dataType:'json',
                     success:function(data)
@@ -30,7 +30,7 @@
                             if(data.length>0){
                                 for(i=0;i<data.length;i++){
                                     
-                                    html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewNotifs/';?>'+data[i].ticketID+'">'+
+                                    html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/SpvController/viewNotifs/';?>'+data[i].ticketID+'">'+
                                     '<strong>New Ticket available</strong><br>'+
                                     '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
                                     'Urgency: <em>'+data[i].urgency+'</em><br>'+
@@ -66,7 +66,7 @@
                             if(data.length>0){
                                 for(i=0;i<data.length;i++){
                                     
-                                    html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewFeedbackNotifs/';?>'+data[i].ticketID+'">'+
+                                    html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/SpvController/viewFeedbackNotifs/';?>'+data[i].ticketID+'">'+
                                     '<strong>New Feedback Received</strong><br>'+
                                     '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
                                     'Urgency: <em>'+data[i].urgency+'</em><br>'+
@@ -88,15 +88,18 @@
                 });    
             }
 
-            $(document).on("click", "#dropdownMenuButton", function(){
-                
-             });
-        });
+                $(document).on("click", "#dropdownMenuButton", function(){
+                    
+                });
+            });
+
+         
     </script>
 </head>
+
 <body class="backgrnd">
-    <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
-       <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/UserController/dashboard','">';
+<nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
+       <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/SpvController/dashboard','">';
             echo 'MMG SUPPORT'; 
             echo '</a>'; ?>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -104,13 +107,12 @@
                 <li class="nav-item">
                     <?php
                         //$loggedInUser = $this->session->userdata['isUserLoggedIn']['userID'];
-                        echo '<a class="nav-link" href="'.base_url().'index.php/UserController/dashboard','">Home</a>';
+                        echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/dashboard','">Home</a>';
                     ?>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="#">My Tickets<span class="sr-only">(current)</span></a>
-                </li>
-                
+                </li>                
             </ul>
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -211,7 +213,7 @@
                                     else{
                                         echo "<td>".$value['userName']."</td>";
                                     }
-                                    echo '<td><a class="btn btn-primary" name="btnDetail" href="'.base_url().'index.php/UserController/ticketActions/'.$value['ticketID'].'">';
+                                    echo '<td><a class="btn btn-primary" name="btnDetail" href="'.base_url().'index.php/SpvController/ticketActions/'.$value['ticketID'].'">';
                                     echo '<span class="fa fa-pencil"></span>';
                                     echo '   Actions';
                                     echo '</a></td>';
@@ -226,7 +228,6 @@
                 </table>
 
     </div>
-   
 </body>
 
 </html>

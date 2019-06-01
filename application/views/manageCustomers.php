@@ -17,18 +17,18 @@
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
-        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/SpvController/dashboard'.'">';
+        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/AdminController/dashboard'.'">';
                 echo 'MMG SUPPORT'; 
                 echo '</a>'; ?>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <?php 
-                            echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/dashboard">Home</a>';
+                            echo '<a class="nav-link" href="'.base_url().'index.php/AdminController/dashboard">Home</a>';
                         ?>
                     </li>
                     <li class="nav-item">
-                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageUsers">';
+                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/AdminController/manageUsers">';
                                 echo 'Manage Users'; 
                                 echo '</a>'; 
                         ?>
@@ -40,7 +40,7 @@
                 </ul>
                 <?php
                     echo '<a style="color: white; margin-left: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
-                    echo '<a href="'.base_url().'index.php/SpvController/logout','" style="margin-left: 3%">';
+                    echo '<a href="'.base_url().'index.php/AdminController/logout','" style="margin-left: 3%">';
                     echo '<span class="fa fa-power-off"></span>';
                     echo '   Sign Out';
                     echo '</a>';
@@ -51,9 +51,9 @@
     <div class="container bg-light">
         <h1>All Customers</h1>
         <hr>
-        <?php echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/SpvController/addNewCustomer'.'">
+        <?php echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/AdminController/addNewCustomer'.'">
             <span class="fa fa-plus"></span> Add New Customer</a>';
-            echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/SpvController/manageProducts'.'">
+            echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/AdminController/manageProducts'.'">
             <span class="fa fa-plus"></span> Manage Product</a>'; ?>
         <table id="custList" class='table table-striped table-bordered' cellspacing='0'>
 			 <thead>
@@ -61,6 +61,7 @@
                     <th>Customer ID</th>
                     <th>Customer Username</th>
                     <th>Customer Email</th>
+                    <th>Customer Phone</th>
                     <th>Company Name</th>
                     <th>Date Added</th>
                     <th>Edit</th>
@@ -72,6 +73,7 @@
                         $id = $value['customerID'];
                         $username = $value['customerUsername'];
                         $email = $value['customerEmail'];
+                        $phone = $value['customerPhone'];
                         $companyName = $value['companyName'];
                         $dateAdded = $value['dateAdded'];
 
@@ -79,9 +81,10 @@
                         echo "<td>".$id."</td>";
                         echo "<td>".$username."</td>";
                         echo "<td>".$email."</td>";
+                        echo "<td>".$phone."</td>";
                         echo "<td>".$companyName."</td>";
                         echo "<td>".$dateAdded."</td>";
-                        echo '<td> <a class="btn btn-primary" name="btnEdit" href="'.base_url().'index.php/SpvController/editCustomer/'.$value['customerID'].'">';
+                        echo '<td> <a class="btn btn-primary" name="btnEdit" href="'.base_url().'index.php/AdminController/editCustomer/'.$value['customerID'].'">';
                         echo '<span class="fa fa-pencil"></span>   Edit Cust</a>';
                         echo "</tr>";
                     }

@@ -13,6 +13,7 @@
          $(document).ready(function(){
             $('#ticketList').dataTable();
          });
+
     </script>
 </head>
 <body>
@@ -26,19 +27,14 @@
                         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageUsers">';
-                                echo 'Manage Users'; 
-                                echo '</a>'; 
-                        ?>
-                    </li> 
-                    <li class="nav-item">
-                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageCustomers">';
-                                echo 'Manage Customers'; 
-                                echo '</a>'; 
+                        <?php 
+                            $loggedInUser = $this->session->userdata['isUserLoggedIn']['userID'];
+                            echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/spvTickets/'.$loggedInUser.'">My Tickets</a>';
                         ?>
                     </li> 
 
                 </ul>
+                
                 <?php
                     echo '<a style="color: white; margin-left: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
                     echo '<a href="'.base_url().'index.php/SpvController/logout','" style="margin-left: 3%">';
@@ -50,19 +46,21 @@
         <!-- add user, edit user, delegate ticket, add customer, manage customer-->
     </nav>
 
-    <div class="container">
+    <div class="container-lg backgrnd" style="padding-right:5%; padding-left: 3%; padding-top: 2%">
+    <div id="jam"></div>
         <h1>All Tickets</h1>
+
         <?php
             echo '<a class="btn btn-primary" href="'.base_url().'index.php/SpvController/exportXls">';
-            echo 'Export to Excel'; 
+            echo '<i class="fa fa-file-excel-o"></i> Export to Excel'; 
             echo '</a>';
         ?>
         <hr>
-        <table id="ticketList" class='table table-striped table-bordered'>
+        <table id="ticketList" class='table table-striped table-bordered bg-light'>
 			        <thead>
 				    <tr>
-                        <th>ID</th>
-                        <th>Token</th>
+                        <th>No.</th>
+                        <th>Ticket Number</th>
                         <th>Date Added</th>
                         <th>Title</th>
                         <th>Customer Name</th>
@@ -71,14 +69,15 @@
                         <th>Urgency</th>
                         <th>Status</th>
                         <th>Handled By</th>
+                        <th>Interval</th>
                         <th>Details</th>
-                        
 				    </tr>
                     </thead>
                     <tbody>
                         <?php 
+                            $no = 1;
                             foreach($ticketData as $key => $value){
-                                $id = $value['ticketID'];
+                                $number = $no++;
                                 $token = $value['token'];
                                 $dateAdded = $value['dateAdded'];
                                 $title = $value['ticketTitle'];
@@ -89,10 +88,11 @@
                                 $urgency = $value['urgency'];
                                 $description = $value['description'];
                                 $status = $value['status'];
+                                $dateUpdated = $value['dateUpdated'];
                                 $handledBy = $value['userID'];
 
                                 echo "<tr>";
-                                echo "<td>".$id."</td>";
+                                echo "<td>".$number."</td>";
                                 echo "<td>".$token."</td>";
                                 echo "<td>".$dateAdded."</td>";
                                 echo "<td>".$title."</td>";
@@ -121,6 +121,9 @@
                                 else{
                                     echo "<td>".$value['userID']."</td>";
                                 }
+                                $interval = date_diff(date_create($dateAdded), date_create($dateUpdated));
+                                $intervalAmount = $interval->format('%R%a');
+                                echo '<td>'.$intervalAmount.'</td>';
                                 echo '<td><a class="btn btn-primary" name="btnDetail" href="'.base_url().'index.php/SpvController/spvTicketDetails/'.$value['ticketID'].'">';
                                 echo '<span class="fa fa-pencil"></span>';
                                 echo '   Details';
@@ -134,5 +137,9 @@
                 </table>
     </div>
 </body>
-
+<footer class="page-footer backgrnd" style="padding-top: 5%">
+         <div class="footer-copyright text-center py-3">© PT Mitra Mentari Global
+           <p>2019</p>
+        </div>
+</footer>
 </html>

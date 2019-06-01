@@ -20,173 +20,6 @@ class SpvController extends CI_Controller {
 			//$data['userDetails'] = $this->SpvModel->getUserById($userID[0]['userID']);
 			$this->load->view('spvHome', $data);
 		}
-
-		public function manageCustomers(){
-			$data=array();
-			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
-			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-			$data['customerData'] = $this->SpvModel->getAllCustomers();
-			$this->load->view('manageCustomers', $data);
-		}
-
-		public function addNewCustomer(){
-			$data=array();
-			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
-			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-			$this->load->view('addCustomer', $data);
-		}
-
-		public function insertNewCustomer(){
-			$customerData = array(
-				'customerEmail' => $this->input->post('email'),
-				'customerUsername' => $this->input->post('username'),
-				'customerPassword' => md5($this->input->post('password')),
-				'companyName' => $this->input->post('companyName')
-			);
-
-			$emailPass = $this->input->post('password');
-
-			$result = $this->SpvModel->insertNewCustomer($customerData, $emailPass);
-
-			if($result == true){
-				mkdir($_SERVER['DOCUMENT_ROOT'].'/uploads/'.$customerData['customerEmail']);
-				$this->session->set_flashdata('success','Customer Data has been added and e-mail sent.');
-				redirect('SpvController/addNewCustomer');
-			}
-			else{
-				$this->session->set_flashdata('fail','Something went wrong.');
-				redirect('SpvController/addNewCustomer/');
-			}
-		}
-		
-		public function editCustomer($custID){
-			$data=array();
-			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
-			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-			$data['editing'] = $this->SpvModel->getCustomerById($custID);
-			$this->load->view('editCustomer', $data);
-		}
-
-		public function updateCustomer($custID){
-			$newData = array(
-				'customerEmail' => $this->input->post('email'),
-				'customerUsername' => $this->input->post('username'),
-				'companyName' => $this->input->post('companyName')
-			);
-			$result = $this->SpvModel->updateCustomer($newData, $custID);
-
-			if($result == true){
-				$this->session->set_flashdata('success','Customer Data has been updated.');
-				redirect('SpvController/editCustomer/'.$custID);
-			}
-			else{
-				$this->session->set_flashdata('fail','Something went wrong.');
-				redirect('SpvController/editCustomer/'.$custID);
-			}
-		}
-
-		public function manageProducts(){
-			$data=array();
-			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
-			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-			$data['productData'] = $this->SpvModel->getAllProducts();
-			$this->load->view('manageProducts', $data);
-		}
-
-		public function addNewProduct(){
-			$data=array();
-			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
-			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-			$data['availCustomer'] = $this->SpvModel->getAllCustomers();
-			$this->load->view('addProduct', $data);
-		}
-
-		public function insertNewProduct(){
-			$productData = array(
-				'productName' => $this->input->post('productName'),
-				'customerID' => $this->input->post('customerID')
-			);
-
-			$result = $this->SpvModel->insertNewProduct($productData);
-
-			if($result == true){
-				$this->session->set_flashdata('success','Product Data has been added.');
-				redirect('SpvController/addNewProduct');
-			}
-			else{
-				$this->session->set_flashdata('fail','Something went wrong.');
-				redirect('SpvController/addNewProduct/');
-			}
-		}
-
-		public function deleteProduct($id){
-			$this->SpvModel->deleteProduct($id);
-		}
-
-		public function manageUsers(){
-			$data=array();
-			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
-			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-			$data['userData'] = $this->SpvModel->getAllUsers();
-			$this->load->view('manageUsers', $data);
-		}
-
-		public function addUser(){
-			$data=array();
-			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
-			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-			$this->load->view('addUser', $data);
-		}
-
-		public function editUser($userID){
-			$data=array();
-			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
-			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-			$data['editing'] = $this->SpvModel->getUserById($userID);
-			$this->load->view('editUser', $data);
-		}
-
-		public function insertNewUser(){
-			$userData = array(
-				'userName' => $this->input->post('username'),
-				'userEmail' => $this->input->post('email'),
-				'userPassword' => md5($this->input->post('userPass')),
-				'userLevel' => $this->input->post('level')
-			);
-
-			$emailPass = $this->input->post('userPass');
-
-			$result = $this->SpvModel->insertNewUser($userData, $emailPass);
-
-			if($result == true){
-				$this->session->set_flashdata('success','New User Data has been added and e-mail sent.');
-				redirect('SpvController/addUser');
-			}
-			else{
-				$this->session->set_flashdata('fail','Something went wrong.');
-				redirect('SpvController/addUser/');
-			}
-		}
-
-		public function updateUser($userID){
-			$newData = array(
-				'userName' => $this->input->post('username'),
-				'userEmail' => $this->input->post('email'),
-				'userPassword' => md5($this->input->post('userPass')),
-				'userLevel' => $this->input->post('level')
-			);
-			$result = $this->SpvModel->updateUser($newData, $userID);
-
-			if($result == true){
-				$this->session->set_flashdata('success','Customer Data has been updated.');
-				redirect('SpvController/editUser/'.$userID);
-			}
-			else{
-				$this->session->set_flashdata('fail','Something went wrong.');
-				redirect('SpvController/editUser/'.$userID);
-			}
-		}
-
 	
 		public function logout()
 		{
@@ -219,6 +52,114 @@ class SpvController extends CI_Controller {
 			}
 		}
 
+		public function spvTickets($userID){
+			$data=array();
+			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
+			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+			$data['ticketData'] = $this->SpvModel->getTicketByUserId($userID);
+			//$data['userDetails'] = $this->UserModel->getUserById($userID);
+			
+			$this->load->view('spvTicketList', $data);
+		}
+
+		public function loadNotifs(){
+			$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+			$notifData = $this->SpvModel->getNotification($userID);
+			echo json_encode($notifData, JSON_PRETTY_PRINT);
+		}
+
+		public function viewNotifs($ticketID){
+			$data = array();
+			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
+			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+			$data['details'] = $this->SpvModel->getTicketById($ticketID);
+			$userID = $this->SpvModel->getTicketById($ticketID);
+			$data['userDetails'] = $this->SpvModel->getUserById($userID[0]['userID']);
+			
+			
+			$this->load->view('spvDetailTicket', $data);
+		}
+
+		public function viewFeedbackNotifs($ticketID){
+			$data = array();
+			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
+			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+			$data['details'] = $this->SpvModel->getTicketById($ticketID);
+			$userID = $this->SpvModel->getTicketById($ticketID);
+			$data['userDetails'] = $this->SpvModel->getUserById($userID[0]['userID']);
+			//$data['notifData'] = $this->UserModel->viewFeedbackNotification($ticketID);
+			
+			$this->load->view('spvDetailTicket', $data);
+		}
+
+		public function takeTicket($ticketID){
+		
+			$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+			$result = $this->SpvModel->handleTicket($ticketID, $userID);
+			
+	
+			if($result==true){
+				$this->session->set_flashdata('success','Ticket added to your Ticket List.');
+				redirect('SpvController/spvDetailTicket/'.$ticketID);
+			}
+		}
+
+		public function ticketActions($ticketID){
+			$data=array();
+			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
+			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+			$data['details'] = $this->SpvModel->getTicketById($ticketID);
+			$data['changelog'] = $this->SpvModel->getChangelog($ticketID);
+			$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+			$data['userDetails'] = $this->SpvModel->getUserById($userID);
+			
+			$this->load->view('spvTicketActions', $data);
+		}
+
+		public function updateTicket($ticketID){
+		
+		
+			$userID = $this->session->userdata['isUserLoggedIn']['userID'];
+	
+			date_default_timezone_set('Asia/Jakarta'); 	
+			$date = date('Y-m-d H:i:s');
+			
+			$emailDetails = $this->UserModel->getTicketById($ticketID);
+			$ticketData = array(
+				
+				'status' => $this->input->post('status'),
+				'dateUpdated' => $date
+			);
+			$changelogData = array(
+				'ticketID' => $ticketID,
+				'userID' => $userID,
+				'status' => $this->input->post('status'),
+				'description' => $this->input->post('changes')
+			);
+			$emailData = array(
+				'token' => $emailDetails[0]['token'],
+				'ticketTitle' => $emailDetails[0]['ticketTitle'],
+				'customerName' => $emailDetails[0]['customerName'],
+				'customerEmail' => $emailDetails[0]['customerEmail'],
+				'customerPhone' => $emailDetails[0]['customerPhone'],
+				'productName' => $emailDetails[0]['productName'],
+				'inquiryType' => $emailDetails[0]['inquiryType'],
+				'description' => $emailDetails[0]['description']
+			);
+			
+			$result = $this->SpvModel->updateTicket($ticketData, $changelogData, $emailData, $ticketID);
+	
+			if($result == true){
+				$this->session->set_flashdata('success','Ticket and changelog has been updated, update e-mail has been sent');
+				
+				redirect('UserController/ticketActions/'.$ticketID);
+			}
+			else{
+				$this->session->set_flashdata('fail','Something went wrong');
+				redirect('UserController/ticketActions/'.$ticketID);
+			}
+		}
+
 		public function exportXls(){
 			
 			$this->load->library('excel');
@@ -239,9 +180,10 @@ class SpvController extends CI_Controller {
 			$this->excel->getActiveSheet()->SetCellValue('K1','Status');
 			$this->excel->getActiveSheet()->SetCellValue('L1','Handled By (ID)');
 			$this->excel->getActiveSheet()->SetCellValue('M1','Last Updated');
-			$this->excel->getActiveSheet()->SetCellValue('N1','Description');
-			$this->excel->getActiveSheet()->SetCellValue('O1','Feedback');
-			$this->excel->getActiveSheet()->SetCellValue('P1','Approval');
+			$this->excel->getActiveSheet()->SetCellValue('N1','Interval (days)');
+			$this->excel->getActiveSheet()->SetCellValue('O1','Description');
+			$this->excel->getActiveSheet()->SetCellValue('P1','Feedback');
+			$this->excel->getActiveSheet()->SetCellValue('Q1','Approval');
 			//row
 			$rowCount = 2;
 			foreach($ticketInfo as $element){
@@ -258,9 +200,12 @@ class SpvController extends CI_Controller {
 				$this->excel->getActiveSheet()->SetCellValue('K'.$rowCount, $element['status']);
 				$this->excel->getActiveSheet()->SetCellValue('L'.$rowCount, $element['userID']);
 				$this->excel->getActiveSheet()->SetCellValue('M'.$rowCount, $element['dateUpdated']);
-				$this->excel->getActiveSheet()->SetCellValue('N'.$rowCount, $element['description']);
-				$this->excel->getActiveSheet()->SetCellValue('O'.$rowCount, $element['feedback']);
-				$this->excel->getActiveSheet()->SetCellValue('P'.$rowCount, $element['approved']);
+				$interval = date_diff(date_create($element['dateAdded']), date_create($element['dateUpdated']));
+				$intervalAmount = $interval->format('%R%a');
+				$this->excel->getActiveSheet()->SetCellValue('N'.$rowCount, $intervalAmount);
+				$this->excel->getActiveSheet()->SetCellValue('O'.$rowCount, $element['description']);
+				$this->excel->getActiveSheet()->SetCellValue('P'.$rowCount, $element['feedback']);
+				$this->excel->getActiveSheet()->SetCellValue('Q'.$rowCount, $element['approved']);
 				$rowCount++;
 			}
 			//$this->excel->getActiveSheet()->fromArray($ticketInfo);

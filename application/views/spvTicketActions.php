@@ -15,7 +15,7 @@
         function show_notifications(){
             $.ajax({
                 type: 'ajax',
-                url:<?php echo '"'.base_url().'index.php/UserController/loadNotifs'.'"'?>,
+                url:<?php echo '"'.base_url().'index.php/SpvController/loadNotifs'.'"'?>,
                 async: true,
                 dataType:'json',
                 success:function(data)
@@ -27,7 +27,7 @@
                         if(data.length>0){
                         for(i=0;i<data.length;i++){
                             
-                            html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewNotifs/';?>'+data[i].ticketID+'">'+
+                            html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/SpvController/viewNotifs/';?>'+data[i].ticketID+'">'+
                                     '<strong>New Ticket available</strong><br>'+
                                     '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
                                     'Urgency: <em>'+data[i].urgency+'</em><br>'+
@@ -58,7 +58,7 @@
 </head>
 <body class="backgrnd">
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
-        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/UserController/dashboard','">';
+        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/SpvController/dashboard','">';
                 echo 'MMG SUPPORT'; 
                 echo '</a>'; ?>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -66,7 +66,7 @@
                 <li class="nav-item">
                     <?php
                         $loggedInUser = $this->session->userdata['isUserLoggedIn']['userID'];
-                        echo '<a class="nav-link" href="'.base_url().'index.php/UserController/myTickets/'.$loggedInUser.'">My Tickets</a>';
+                        echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/spvTickets/'.$loggedInUser.'">My Tickets</a>';
                     ?>
                 </li>
                 </ul>
@@ -91,7 +91,7 @@
                 
             </div>
     </nav>
-<div class="container">
+<div class="container backgrnd">
         <div class="row">
         <div class="col-sm-6">
             <h1>Ticket Details</h1>
@@ -113,7 +113,7 @@
                 ?>  
                 <ul class="list-group">
                     <li class="list-group-item"><?php echo "Ticket ID: ".$details[0]['ticketID'];?></li>
-                    <li class="list-group-item"><?php echo "Token #: ".$details[0]['token'];?></li>
+                    <li class="list-group-item"><?php echo "Ticket #: ".$details[0]['token'];?></li>
                     <li class="list-group-item"><?php echo "Date Added: ".$details[0]['dateAdded'];?></li>
                     <li class="list-group-item"><?php echo "Title/General Idea: ".$details[0]['ticketTitle'];?></li>
                     <li class="list-group-item"><?php echo "Customer Name: ".$details[0]['customerName'];?></li>
@@ -166,7 +166,7 @@
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label for="changes"><b>Changes Made: </b></label>
-                        <textarea  class="form-group" rows="10" cols="70" name="changes" required=""></textarea>
+                        <textarea  class="form-group" rows="10" cols="80" name="changes" required=""></textarea>
                     </div>
                     <div class="form-group">
                         <label for="status"><b>Status: </b></label>
@@ -177,14 +177,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <input type="submit" name="submitChanges" class="btn btn-primary" value="Submit Changes"/>
+                        <input type="submit" name="submitChanges" class="btn-primary" value="Submit Changes"/>
                     </div>
                 </form>
                 <?php echo form_close(); ?>
            
             
             <p><strong>Changelog</strong></p>
-            <table id="changelog" class='table table-striped table-bordered bg-light' cellspacing='0' style="margin-top:3%">
+            <table id="changelog" class='table table-striped table-bordered' cellspacing='0' style="margin-top:3%">
                 <thead>
                 <tr>
                         <th>Changelog ID</th>

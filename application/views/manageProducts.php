@@ -17,24 +17,24 @@
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
-        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/SpvController/dashboard'.'">';
+        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/AdminController/dashboard'.'">';
                 echo 'MMG SUPPORT'; 
                 echo '</a>'; ?>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <?php 
-                            echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/dashboard">Home</a>';
+                            echo '<a class="nav-link" href="'.base_url().'index.php/AdminController/dashboard">Home</a>';
                         ?>
                     </li>
                     <li class="nav-item">
-                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageUsers">';
+                        <?php echo '<a class="nav-link" href="'.base_url().'index.php/AdminController/manageUsers">';
                                 echo 'Manage Users'; 
                                 echo '</a>'; 
                         ?>
                     </li> 
                     <li class="nav-item">
-                    <?php echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageCustomers">';
+                    <?php echo '<a class="nav-link" href="'.base_url().'index.php/AdminController/manageCustomers">';
                                 echo 'Manage Customers'; 
                                 echo '</a>'; 
                         ?>
@@ -43,7 +43,7 @@
                 </ul>
                 <?php
                     echo '<a style="color: white; margin-left: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
-                    echo '<a href="'.base_url().'index.php/SpvController/logout','" style="margin-left: 3%">';
+                    echo '<a href="'.base_url().'index.php/AdminController/logout','" style="margin-left: 3%">';
                     echo '<span class="fa fa-power-off"></span>';
                     echo '   Sign Out';
                     echo '</a>';
@@ -53,8 +53,12 @@
 
     <div class="container bg-light">
         <h1>All Products</h1>
+            <?php
+                echo '<h5 style="color:blue">'.$this->session->flashdata('success').'</h5>';
+                        
+            ?>  
         <hr>
-        <?php echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/SpvController/addNewProduct'.'">
+        <?php echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/AdminController/addNewProduct'.'">
             <span class="fa fa-plus"></span> Add New Product</a>'; ?>
         
         <table id="prodList" class='table table-striped table-bordered' cellspacing='0'>
@@ -77,7 +81,7 @@
                         echo "<td>".$id."</td>";
                         echo "<td>".$productName."</td>";
                         echo "<td>".$customerName."</td>";
-                        echo '<td> <a class="btn btn-danger" name="btnDelete" href="'.base_url().'index.php/SpvController/deleteProduct/'.$value['productID'].'">';
+                        echo '<td> <a class="btn btn-danger" name="btnDelete" href="'.base_url().'index.php/AdminController/deleteProduct/'.$value['productID'].'">';
                         echo '<span class="fa fa-close"></span>   Delete Prod</a>';
                         echo "</tr>";
                     }

@@ -12,30 +12,30 @@
 </head>
 <body>
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
-        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/SpvController/dashboard'.'">';
+        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/AdminController/dashboard'.'">';
                 echo 'MMG SUPPORT'; 
                 echo '</a>'; ?>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <?php 
-                            echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/dashboard">Home</a>';
+                            echo '<a class="nav-link" href="'.base_url().'index.php/AdminController/dashboard">Home</a>';
                         ?>
                     </li>
                     <li class="nav-item">
                         <?php 
-                            echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageUsers">Manage Users</a>';
+                            echo '<a class="nav-link" href="'.base_url().'index.php/AdminController/manageUsers">Manage Users</a>';
                         ?>
                     </li> 
                     <li class="nav-item">
                         <?php 
-                            echo '<a class="nav-link" href="'.base_url().'index.php/SpvController/manageCustomers">Manage Customers</a>';
+                            echo '<a class="nav-link" href="'.base_url().'index.php/AdminController/manageCustomers">Manage Customers</a>';
                         ?>
                     </li> 
 
                 </ul>
                 <?php
-                            echo '<a href="'.base_url().'index.php/SpvController/logout','" style="margin-left: 3%">';
+                            echo '<a href="'.base_url().'index.php/AdminController/logout','" style="margin-left: 3%">';
                             echo '<span class="fa fa-power-off"></span>';
                             echo '   Sign Out';
                             echo '</a>';
@@ -54,7 +54,7 @@
         }
     ?>
 	<hr>
-     <?php echo form_open('SpvController/updateUser/'.$editing[0]['userID']); ?>
+     <?php echo form_open('AdminController/updateUser/'.$editing[0]['userID']); ?>
       <form action="" method="post">
         <div class="form-group">
           <label for="name">Username</label>

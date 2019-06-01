@@ -15,6 +15,7 @@
             $('#ticketList').dataTable();
 
             show_notifications();
+            show_feedback_notifications();
 
             function show_notifications(){
                 $.ajax({
@@ -39,14 +40,50 @@
                                     ' <hr></a>';
                                             
                                 }
-                             $('.dropdown-menu').html(html);
+                             $('#ticket-list').html(html);
                        
-                            $('.count').html(data.length);
+                            $('#ticket-count').html(data.length);
                         }
                         else{
                             html += "<p>No New Notifications</p>";
-                            $('.dropdown-menu').html(html);
-                            $('.count').html(0);
+                            $('#ticket-list').html(html);
+                            $('#ticket-count').html(0);
+                        }
+                    }
+                });    
+            }
+
+            function show_feedback_notifications(){
+                $.ajax({
+                    type: 'ajax',
+                    url:<?php echo '"'.base_url().'index.php/UserController/loadFeedbackNotifs'.'"'?>,
+                    async: true,
+                    dataType:'json',
+                    success:function(data)
+                    {
+                            var html ='';
+                            var i;
+                            var notifAmount= data.length;
+                            if(data.length>0){
+                                for(i=0;i<data.length;i++){
+                                    
+                                    html += '<a class="dropdown-item" href="<?php echo base_url().'index.php/UserController/viewFeedbackNotifs/';?>'+data[i].ticketID+'">'+
+                                    '<strong>New Feedback Received</strong><br>'+
+                                    '<strong>Title: '+data[i].ticketTitle+'</strong><br>'+
+                                    'Urgency: <em>'+data[i].urgency+'</em><br>'+
+                                    '<small>Cust: <em>'+data[i].customerName+'</em></small><br>'+
+                                    '<small>Approved: <em>'+data[i].approved+'</em></small><br>'+
+                                    ' <hr></a>';
+                                            
+                                }
+                             $('#feedback-list').html(html);
+                       
+                            $('#feedback-count').html(data.length);
+                        }
+                        else{
+                            html += "<p>No New Notifications</p>";
+                            $('#feedback-list').html(html);
+                            $('.feedback-count').html(0);
                         }
                     }
                 });    
@@ -60,7 +97,7 @@
     
     
 </head>
-<body>
+<body class="backgrnd">
 
     <nav class="navbar sticky-top navbar-expand-lg bg-dark"> 
        <?php echo '<a class="navbar-brand" href="'.base_url().'index.php/UserController/dashboard'.'">';
@@ -79,15 +116,17 @@
                 </li> 
             
             </ul>
+            
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Notifications: <span class="label label-pill label-danger count" style="border-radius:10px;"></span>
+                    New Tickets: <span class="label label-pill label-danger" id="ticket-count" style="border-radius:10px;"></span>
                 </button>
                 
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton" id="ticket-list">
                     
                 </div>
             </div>
+            
                 <?php
                     echo '<a style="color: white; margin-left: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
                     echo '<a href="'.base_url().'index.php/UserController/logout','" style="margin-left: 3%">';
@@ -98,15 +137,25 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container bg-light">
         <h1>All Tickets</h1>
+        <hr>
+            <div class="dropdown" style="margin-bottom:3%">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    New Feedbacks: <span class="label label-pill label-danger" id="feedback-count" style="border-radius:10px;"></span>
+                </button>
+                
+                <div class="feedback-dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton" id="feedback-list">
+                    
+                </div>
+            </div>
         <!--<button id="testBtn">Test</button>-->
         <?php //echo base_url().'index.php/UserController/viewNotifs'?>
-        <table id="ticketList" class='table table-striped table-bordered'>
+        <table id="ticketList" class='table table-striped table-bordered bg-light'>
 			        <thead>
 				    <tr>
-                        <th>ID</th>
-                        <th>Token</th>
+                        <th>No.</th>
+                        <th>Ticket Number</th>
                         <th>Date Added</th>
                         <th>Title</th>
                         <th>Customer Name</th>
@@ -120,9 +169,10 @@
 				    </tr>
                     </thead>
                     <tbody>
-                        <?php 
+                        <?php
+                            $no = 1; 
                             foreach($ticketData as $key => $value){
-                                $id = $value['ticketID'];
+                                $number = $no++;
                                 $token = $value['token'];
                                 $dateAdded = $value['dateAdded'];
                                 $title = $value['ticketTitle'];
@@ -136,7 +186,7 @@
                                 $handledBy = $value['userID'];
 
                                 echo "<tr>";
-                                echo "<td>".$id."</td>";
+                                echo "<td>".$number."</td>";
                                 echo "<td>".$token."</td>";
                                 echo "<td>".$dateAdded."</td>";
                                 echo "<td>".$title."</td>";
@@ -188,7 +238,5 @@
            <p>2019</p>
         </div>
 </footer>
-<script>
-    
-</script>
+
 </html>
