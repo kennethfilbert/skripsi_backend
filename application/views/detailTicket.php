@@ -10,7 +10,7 @@
 		echo $css;
     ?>
     <script>
-        show_notifications();
+        /*show_notifications();
             show_feedback_notifications();
 
             function show_notifications(){
@@ -87,7 +87,7 @@
         
         $(document).on("click", "#dropdownMenuButton", function(){
             
-        });
+        });*/
     </script>
 </head>
 <body class="backgrnd">
@@ -99,12 +99,17 @@
                     <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <?php
+                            echo '<a class="nav-link" href="'.base_url().'index.php/UserController/dashboard">Home</a>';
+                        ?>
+                    </li>
+                    <li class="nav-item">
+                        <?php
                             $loggedInUser = $this->session->userdata['isUserLoggedIn']['userID'];
                             echo '<a class="nav-link" href="'.base_url().'index.php/UserController/myTickets/'.$loggedInUser.'">My Tickets</a>';
                         ?>
                     </li>
                     </ul>
-                    <div class="dropdown">
+                    <!--<div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             New Tickets: <span class="label label-pill label-danger" id="ticket-count" style="border-radius:10px;"></span>
                         </button>
@@ -112,7 +117,7 @@
                         <div class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton" id="ticket-list">
                             
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                     <?php
                         echo '<a style="color: white; margin-left: 1%; margin-right: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
@@ -127,7 +132,7 @@
     <div class="container bg-light">
         <h1>Ticket Details</h1>
         <hr>
-            <div class="dropdown" style="margin-bottom:3%">
+            <!--<div class="dropdown" style="margin-bottom:3%">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     New Feedbacks: <span class="label label-pill label-danger" id="feedback-count" style="border-radius:10px;"></span>
                 </button>
@@ -135,7 +140,7 @@
                 <div class="feedback-dropdown-menu scrollable-menu" aria-labelledby="dropdownMenuButton" id="feedback-list">
                     
                 </div>
-            </div>
+            </div>-->
             <?php
                 /*if(!empty($success_msg)){
                     echo '<div style="color: blue;"
@@ -187,13 +192,29 @@
                 </li>
                 <li class="list-group-item"><?php echo "Date Updated: ".$details[0]['dateUpdated'];?></li>
                 <li class="list-group-item"><?php echo "Description: ".$details[0]['description'];?></li>
-                <li class="list-group-item"><?php 
-                    if($details[0]['approved']==1)
-                        echo "Approved: Yes";
-                    else 
-                        echo "Approved: No";
-                ?></li>
-                <li class="list-group-item"><?php echo "Feedback: ".$details[0]['feedback'];?></li>
+                <li class="list-group-item">
+                    <?php echo "Customer Feedback: ";
+                    
+                        if($details[0]['feedback']!=null){
+                            echo $details[0]['feedback'];
+                        }
+                        else echo "<i>No Feedback Yet</i>";
+                    ?>
+                </li>
+                
+                <li class="list-group-item">
+                    <?php echo "Approval Status: ";
+                        if($details[0]['approved'] != null && $details[0]['approved']==1){
+                            echo "<i>Approved</i>";
+                        }
+                        elseif($details[0]['approved'] != null && $details[0]['approved']==0){
+                            echo "<i>Not Approved</i>";
+                        }
+                        else{
+                            echo "<i>Not Yet Approved</i>";
+                        }
+                
+                    ?>
                 
                 <li class="list-group-item">Screenshot: <br><?php echo '<img src="'.$details[0]['picturePath'].'" style="width:60%">'; ?> </li>
                 <?php

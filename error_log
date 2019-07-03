@@ -1,0 +1,7 @@
+[03-Jun-2019 06:42:34 UTC] PHP Fatal error:  Class 'ZipArchive' not found in /home/careermmg/public_html/application/third_party/PHPExcel/Writer/Excel2007.php on line 220
+[03-Jun-2019 06:42:48 UTC] PHP Fatal error:  Class 'ZipArchive' not found in /home/careermmg/public_html/application/third_party/PHPExcel/Writer/Excel2007.php on line 220
+[03-Jun-2019 06:45:57 UTC] PHP Fatal error:  Class 'ZipArchive' not found in /home/careermmg/public_html/application/third_party/PHPExcel/Writer/Excel2007.php on line 220
+[03-Jun-2019 06:52:16 UTC] PHP Fatal error:  Class 'ZipArchive' not found in /home/careermmg/public_html/application/third_party/PHPExcel/Writer/Excel2007.php on line 220
+[03-Jun-2019 06:54:31 UTC] PHP Fatal error:  Class 'ZipArchive' not found in /home/careermmg/public_html/application/third_party/PHPExcel/Writer/Excel2007.php on line 220
+[03-Jun-2019 09:52:41 UTC] PHP Parse error:  syntax error, unexpected '<' in /home/careermmg/public_html/application/views/landingPage.php on line 101
+[03-Jun-2019 09:56:03 UTC] PHP Parse error:  syntax error, unexpected end of file in /home/careermmg/public_html/application/views/landingPage.php on line 122

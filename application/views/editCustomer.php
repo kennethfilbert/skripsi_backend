@@ -50,7 +50,9 @@
         elseif($this->session->flashdata('fail')!=null){
             echo '<p style="color:red">'.$this->session->flashdata('fail').'</p>';
         }
-    ?>
+            echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/AdminController/manageCompany'.'">
+            <span class="fa fa-plus"></span> Manage Company Data</a>';
+        ?>
 	<hr>
      <?php echo form_open('AdminController/updateCustomer/'.$editing[0]['customerID']); ?>
       <form action="" method="post">
@@ -71,7 +73,13 @@
         </div>
         <div class="form-group">
           <label for="companyName">Company Name</label>
-          <input type="text" class="form-control" name="companyName" required="" value="<?php echo !empty($editing[0]['companyName'])?$editing[0]['companyName']:''; ?>">
+          <select name="companyName" required="">
+                    <?php
+                            foreach($availCompany as $key =>$value){
+                                echo '<option value="'.$value['companyID'].'">'.$value['companyName'].'</option>';
+                            }
+                    ?>  
+            </select>
           <?php echo form_error('companyName','<span class="help-block">','</span>'); ?>
         </div>
         <div class="form-group">

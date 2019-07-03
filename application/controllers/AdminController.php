@@ -25,7 +25,7 @@ class AdminController extends CI_Controller {
 	    {
             $this->session->unset_userdata('isUserLoggedIn');
             $this->session->sess_destroy();
-            redirect(base_url(), 'refresh');
+            redirect('UserController/index', 'refresh');
 	    }
 
         public function manageCustomers(){
@@ -40,6 +40,7 @@ class AdminController extends CI_Controller {
 			$data=array();
 			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+			$data['availCompany'] = $this->AdminModel->getAllCompanies();
 			$this->load->view('addCustomer', $data);
 		}
 
@@ -47,13 +48,16 @@ class AdminController extends CI_Controller {
 			$customerData = array(
 				'customerEmail' => $this->input->post('email'),
 				'customerUsername' => $this->input->post('username'),
+				'customerPhone' => $this->input->post('phone'),
 				'customerPassword' => md5($this->input->post('password')),
-				'companyName' => $this->input->post('companyName')
+				'companyID' => $this->input->post('companyName')
 			);
 
-			$emailPass = $this->input->post('password');
-
-			$result = $this->AdminModel->insertNewCustomer($customerData, $emailPass);
+			$emailData = array(
+			    'emailPass' => $this->input->post('password'),
+			    'companyName' => $this->AdminModel->getCompanyName($customerData['companyID'])
+			 );
+			$result = $this->AdminModel->insertNewCustomer($customerData, $emailData);
 
 			if($result == true){
 				mkdir($_SERVER['DOCUMENT_ROOT'].'/uploads/'.$customerData['customerEmail']);
@@ -71,6 +75,7 @@ class AdminController extends CI_Controller {
 			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 			$data['editing'] = $this->AdminModel->getCustomerById($custID);
+			$data['availCompany'] = $this->AdminModel->getAllCompanies();
 			$this->load->view('editCustomer', $data);
 		}
 
@@ -78,7 +83,8 @@ class AdminController extends CI_Controller {
 			$newData = array(
 				'customerEmail' => $this->input->post('email'),
 				'customerUsername' => $this->input->post('username'),
-				'companyName' => $this->input->post('companyName')
+				'customerPhone' => $this->input->post('phone'),
+				'companyID' => $this->input->post('companyName')
 			);
 			$result = $this->AdminModel->updateCustomer($newData, $custID);
 
@@ -97,32 +103,58 @@ class AdminController extends CI_Controller {
 			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 			$data['productData'] = $this->AdminModel->getAllProducts();
+			$data['availCompany'] = $this->AdminModel->getAllCompanies();
 			$this->load->view('manageProducts', $data);
 		}
 
-		public function addNewProduct(){
+		/*public function addNewProduct(){
 			$data=array();
 			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
-			$data['availCustomer'] = $this->AdminModel->getAllCustomers();
+			$data['availCompany'] = $this->AdminModel->getAllCompanies();
 			$this->load->view('addProduct', $data);
+		}*/
+
+		public function manageCompany(){
+			$data=array();
+			$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
+			$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
+			$data['companyData'] = $this->AdminModel->getAllCompanies();
+			$this->load->view('manageCompany', $data);
 		}
 
 		public function insertNewProduct(){
 			$productData = array(
 				'productName' => $this->input->post('productName'),
-				'customerID' => $this->input->post('customerID')
+				'companyID' => $this->input->post('companyID')
 			);
 
 			$result = $this->AdminModel->insertNewProduct($productData);
 
 			if($result == true){
 				$this->session->set_flashdata('success','Product Data has been added.');
-				redirect('AdminController/addNewProduct');
+				redirect('AdminController/manageProducts');
 			}
 			else{
 				$this->session->set_flashdata('fail','Something went wrong.');
-				redirect('AdminController/addNewProduct/');
+				redirect('AdminController/manageProducts');
+			}
+		}
+
+		public function insertNewCompany(){
+			$productData = array(
+				'companyName' => $this->input->post('companyName'),
+			);
+
+			$result = $this->AdminModel->insertNewCompany($productData);
+
+			if($result == true){
+				$this->session->set_flashdata('success','Company Data has been added.');
+				redirect('AdminController/manageCompany');
+			}
+			else{
+				$this->session->set_flashdata('fail','Something went wrong.');
+				redirect('AdminController/manageCompany/');
 			}
 		}
 
@@ -134,6 +166,12 @@ class AdminController extends CI_Controller {
         
         public function deleteCustomer($id){
 			$this->AdminModel->deleteCustomer($id);
+        }
+        
+        public function deleteCompany($id){
+			$this->AdminModel->deleteCompany($id);
+			$this->session->set_flashdata('success','Company data has been deleted.');
+				redirect('AdminController/manageCompany');
         }
         
         public function deleteUser($id){

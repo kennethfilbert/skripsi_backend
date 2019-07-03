@@ -96,6 +96,7 @@ class AdminModel extends CI_Model{
                         </ul>
                         <br>
                         <p>Please change your password immediately when you first log in.</p>
+                        <p>Employee Login Page: http://159.89.197.191/~careermmg/index.php/UserController/index </p>
                         
         				<p>Regards,</p>
 
@@ -149,10 +150,17 @@ class AdminModel extends CI_Model{
 		$this->db->where($condition);
 		$this->db->delete('products');
     }
+    
+    public function deleteCompany($id){
+        $condition = "companyID =" . "'" . $id . "'";
+		$this->db->where($condition);
+		$this->db->delete('companies');
+    }
 
     public function getAllCustomers(){
         $this->db->select('*');
         $this->db->from('customers');
+        $this->db->join('companies', 'companies.companyID = customers.companyID');
         $query = $this->db->get();
         if($query->num_rows() > 0){
             return $query->result_array();
@@ -206,15 +214,13 @@ class AdminModel extends CI_Model{
                                 Customer Email    : <b>".$newData['customerEmail']."
                             </b></li>
                             <li>
-                                Password       : <b>".$emailData."
+                                Password       : <b>".$emailData['emailPass']."
                             </b></li>
-                            <li>
-                                Company Name     : ".$newData['companyName']."
-                            </li>
                             
                         </ul>
                         <br>
                         <p>Please change your password immediately when you first log in.</p>
+                        <p>Customer Login Page: http://159.89.197.191/~careermmg/ </p>
                         
         				<p>Regards,</p>
 
@@ -248,7 +254,7 @@ class AdminModel extends CI_Model{
         		$this->email->send();
                 $this->load->library('encrypt');
                 
-                echo $newData['customerEmail'];
+                //echo $newData['customerEmail'];
                 return true;
     }
 
@@ -268,7 +274,7 @@ class AdminModel extends CI_Model{
     public function getAllProducts(){
         $this->db->select('*');
         $this->db->from('products');
-        $this->db->join('customers', 'customers.customerID = products.customerID');
+        $this->db->join('companies', 'companies.companyID = products.companyID');
         $query = $this->db->get();
         if($query->num_rows() > 0){
             return $query->result_array();
@@ -280,6 +286,36 @@ class AdminModel extends CI_Model{
 
     public function insertNewProduct($newData){
         $this->db->insert('products',$newData);
+        return true;
+    }
+
+    public function getAllCompanies(){
+        $this->db->select('*');
+        $this->db->from('companies');
+        $query = $this->db->get();
+        if($query->num_rows() > 0){
+            return $query->result_array();
+        }
+        else{
+            return false;
+        }
+    }
+    
+    public function getCompanyName($id){
+        $this->db->select('companyName');
+        $this->db->from('companies');
+        $this->db->where('companyID', $id);
+        $query = $this->db->get();
+        if($query->num_rows() > 0){
+            return $query->result_array();
+        }
+        else{
+            return false;
+        }
+    }
+
+    public function insertNewCompany($newData){
+        $this->db->insert('companies',$newData);
         return true;
     }
 }

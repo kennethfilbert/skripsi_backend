@@ -25,7 +25,7 @@ class SpvController extends CI_Controller {
 		{
 				$this->session->unset_userdata('isUserLoggedIn');
 				$this->session->sess_destroy();
-				redirect(base_url(), 'refresh');
+				redirect('UserController/index', 'refresh');
 		}
 
 		public function spvTicketDetails($ticketID){
@@ -43,7 +43,8 @@ class SpvController extends CI_Controller {
 		public function delegateTicket($ticketID){
 			$userID = $this->input->post('userID');
 			$spvName = $this->session->userdata['isUserLoggedIn']['userName'];
-			$result = $this->SpvModel->delegateTicket($ticketID, $userID, $spvName);
+			$ticketData = $this->SpvModel->getTicketById($ticketID);
+			$result = $this->SpvModel->delegateTicket($ticketData, $userID, $spvName);
 
 			if($result == true){
 				$this->session->set_flashdata('success','Ticket has been delegated to the user.');
@@ -75,7 +76,8 @@ class SpvController extends CI_Controller {
 			$data['details'] = $this->SpvModel->getTicketById($ticketID);
 			$userID = $this->SpvModel->getTicketById($ticketID);
 			$data['userDetails'] = $this->SpvModel->getUserById($userID[0]['userID']);
-			
+			$data['availUsers'] = $this->SpvModel->getUserByLevel();
+			$data['notifData'] = $this->SpvModel->viewNotification($ticketID);
 			
 			$this->load->view('spvDetailTicket', $data);
 		}
@@ -87,7 +89,7 @@ class SpvController extends CI_Controller {
 			$data['details'] = $this->SpvModel->getTicketById($ticketID);
 			$userID = $this->SpvModel->getTicketById($ticketID);
 			$data['userDetails'] = $this->SpvModel->getUserById($userID[0]['userID']);
-			//$data['notifData'] = $this->UserModel->viewFeedbackNotification($ticketID);
+			$data['notifData'] = $this->SpvModel->viewFeedbackNotification($ticketID);
 			
 			$this->load->view('spvDetailTicket', $data);
 		}
@@ -95,9 +97,9 @@ class SpvController extends CI_Controller {
 		public function takeTicket($ticketID){
 		
 			$userID = $this->session->userdata['isUserLoggedIn']['userID'];
-			$result = $this->SpvModel->handleTicket($ticketID, $userID);
+			$ticketData = $this->SpvModel->getTicketById($ticketID);
+			$result = $this->SpvModel->handleTicket($ticketData, $userID);
 			
-	
 			if($result==true){
 				$this->session->set_flashdata('success','Ticket added to your Ticket List.');
 				redirect('SpvController/spvDetailTicket/'.$ticketID);
@@ -209,10 +211,11 @@ class SpvController extends CI_Controller {
 				$rowCount++;
 			}
 			//$this->excel->getActiveSheet()->fromArray($ticketInfo);
+			PHPExcel_Settings::setZipClass(PHPExcel_Settings::PCLZIP);
 			$filename = 'data-'.time().'.xlsx';
 			header('Content-Disposition: attachment;filename="'.$filename.'"');
 			header("Content-Type: application/vnd.ms-excel");
-			header('Cache-Control: max-age=0');
+			//header('Cache-Control: max-age=0');
 			
 			//$objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
 			$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');

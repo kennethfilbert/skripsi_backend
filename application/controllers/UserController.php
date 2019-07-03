@@ -25,10 +25,12 @@ class UserController extends CI_Controller {
 		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 		$data['ticketData'] = $this->UserModel->getAllTickets();
-	
+		if($this->session->userdata['isUserLoggedIn']['isLoggedIn'] !=true ){
+			redirect('/UserController/index', 'refresh');
+		}
 		//$data['userDetails'] = $this->UserModel->getUserName();
 		
-		$this->load->view('home', $data);
+		$this->load->view('userHome', $data);
 	}
 
 	public function loadNotifs(){
@@ -50,7 +52,10 @@ class UserController extends CI_Controller {
 		$data['details'] = $this->UserModel->getTicketById($ticketID);
 		$userID = $this->UserModel->getTicketById($ticketID);
 		$data['userDetails'] = $this->UserModel->getUserById($userID[0]['userID']);
-		
+		$data['notifData'] = $this->UserModel->viewNotification($ticketID);
+		if($this->session->userdata['isUserLoggedIn']['isLoggedIn'] !=true ){
+			redirect('/UserController/index', 'refresh');
+		}
 		
 		$this->load->view('detailTicket', $data);
 	}
@@ -63,6 +68,9 @@ class UserController extends CI_Controller {
 		$userID = $this->UserModel->getTicketById($ticketID);
 		$data['userDetails'] = $this->UserModel->getUserById($userID[0]['userID']);
 		$data['notifData'] = $this->UserModel->viewFeedbackNotification($ticketID);
+		if($this->session->userdata['isUserLoggedIn']['isLoggedIn'] !=true ){
+			redirect('/UserController/index', 'refresh');
+		}
 		
 		$this->load->view('detailTicket', $data);
 	}
@@ -72,6 +80,9 @@ class UserController extends CI_Controller {
 		$data['js'] = $this->load->view('include/script.php', NULL, TRUE);
 		$data['css'] = $this->load->view('include/style.php', NULL, TRUE);
 		$data['ticketData'] = $this->UserModel->getTicketByUserId($userID);
+		if($this->session->userdata['isUserLoggedIn']['isLoggedIn'] !=true ){
+			redirect('UserController/index', 'refresh');
+		}
 		//$data['userDetails'] = $this->UserModel->getUserById($userID);
 		
 		$this->load->view('myTickets', $data);
@@ -85,6 +96,9 @@ class UserController extends CI_Controller {
 		$data['changelog'] = $this->UserModel->getChangelog($ticketID);
 		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
 		$data['userDetails'] = $this->UserModel->getUserById($userID);
+		if($this->session->userdata['isUserLoggedIn']['isLoggedIn'] !=true ){
+			redirect('UserController/index', 'refresh');
+		}
 		
 		$this->load->view('ticketActions', $data);
 	}
@@ -111,30 +125,64 @@ class UserController extends CI_Controller {
 		$result = $this->UserModel->userLogin($loginData);
 
 		if($result==true){
-			$userName = $this->input->post('username');
+					$userName = $this->input->post('username');
 					$result = $this->UserModel->getUserInfo($userName);
 					$sessionData = array(
 						'userID' => $result[0]['userID'],
 						'userName' => $result[0]['userName'],
 						'userEmail' => $result[0]['userEmail'],
 						'userLevel' => $result[0]['userLevel'],
-						'isLoggedId' => true
+						'isLoggedIn' => true
 						);
 
 					$this->session->set_userdata('isUserLoggedIn', $sessionData);
 					$loggedInUser = $sessionData;	
 					$data['loggedInUser'] = $sessionData;
 					$data['ticketData'] = $this->UserModel->getAllTickets();
+					
 					//$data['userDetails'] = $this->UserModel->getUserName();
 					//$data['userDetails'] = $this->UserModel->getUserById($result[0]['userID']);
 					//$data['success_msg'] = 'Welcome, '.$result[0]->customerUsername.'!';
 					if($result[0]['userLevel'] == 2){
-						$this->load->view('home', $data);
+						$this->load->helper('cookie');
+						$cookie = array(
+							'name'   => 'user_session',
+							'expire' => '7200',
+							'domain' => '/',
+							'path'   => '/',
+							'prefix' => 'user',
+							'secure' => TRUE
+						);
+						$this->input->set_cookie($cookie);
+						//var_dump($cookie);
+						$this->load->view('userHome', $data);
 					}
 					elseif($result[0]['userLevel'] == 1){
+						$this->load->helper('cookie');
+						$cookie = array(
+							'name'   => 'spv_session',
+							'expire' => '7200',
+							'domain' => '/',
+							'path'   => '/',
+							'prefix' => 'spv',
+							'secure' => TRUE
+						);
+						$this->input->set_cookie($cookie);
+						//var_dump($cookie);
 						$this->load->view('spvHome', $data);
 					}
 					elseif($result[0]['userLevel'] == 0){
+						$this->load->helper('cookie');
+						$cookie = array(
+							'name'   => 'admin_session',
+							'expire' => '7200',
+							'domain' => '/',
+							'path'   => '/',
+							'prefix' => 'admin',
+							'secure' => TRUE
+						);
+						$this->input->set_cookie($cookie);
+						//var_dump($cookie);
 						$this->load->view('adminDashboard', $data);
 					}
 					
@@ -149,7 +197,7 @@ class UserController extends CI_Controller {
 	{
 		$this->session->unset_userdata('isUserLoggedIn');
         $this->session->sess_destroy();
-        redirect(base_url(), 'refresh');
+        redirect('UserController/index', 'refresh');
 	}
 
 	public function ticketDetails($ticketID){
@@ -159,6 +207,9 @@ class UserController extends CI_Controller {
 		$data['details'] = $this->UserModel->getTicketById($ticketID);
 		$userID = $this->UserModel->getTicketById($ticketID);
 		$data['userDetails'] = $this->UserModel->getUserById($userID[0]['userID']);
+		if($this->session->userdata['isUserLoggedIn']['isLoggedIn'] !=true ){
+			redirect('UserController/index', 'refresh');
+		}
 		
 		$this->load->view('detailTicket', $data);
 	}
@@ -166,7 +217,8 @@ class UserController extends CI_Controller {
 	public function takeTicket($ticketID){
 		
 		$userID = $this->session->userdata['isUserLoggedIn']['userID'];
-		$result = $this->UserModel->handleTicket($ticketID, $userID);
+		$ticketData = $this->UserModel->getTicketById($ticketID);
+		$result = $this->UserModel->handleTicket($ticketData, $userID);
 		
 
 		if($result==true){

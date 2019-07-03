@@ -184,7 +184,7 @@
            
             
             <p><strong>Changelog</strong></p>
-            <table id="changelog" class='table table-striped table-bordered' cellspacing='0' style="margin-top:3%">
+            <table id="changelog" class='table table-striped table-bordered bg-light' cellspacing='0' style="margin-top:3%">
                 <thead>
                 <tr>
                         <th>Changelog ID</th>

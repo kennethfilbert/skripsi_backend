@@ -13,7 +13,7 @@
 <body class="bg-dark">
     
     <div class="container" style="margin-top: 5%; width: 50%; border-radius: 50px; background: white; padding:5%">
-    <img src="http://192.168.0.11/skripsi/assets/mmg.png" style=" display: block;
+    <img src="http://159.89.197.191/~careermmg/assets/mmg.png" style=" display: block;
                         margin-left: auto;
                             margin-right: auto;
                             width: 30%">

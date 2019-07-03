@@ -10,9 +10,9 @@
 		echo $css;
     ?>
     <script>
-         //$(document).ready(function(){
-       //     $('#prodList').dataTable();
-        // });
+         $(document).ready(function(){
+            $('#prodList').dataTable();
+         });
     </script>
 </head>
 <body>
@@ -58,15 +58,39 @@
                         
             ?>  
         <hr>
-        <?php echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/AdminController/addNewProduct'.'">
-            <span class="fa fa-plus"></span> Add New Product</a>'; ?>
-        
+        <?php 
+            echo '<a class="btn btn-primary" style="margin:10px" a href="'.base_url().'index.php/AdminController/manageCompany'.'">
+            <span class="fa fa-plus"></span> Manage Company Data</a>';
+        ?>
+        <h3>Add New Product Data</h3>
+        <?php echo form_open('AdminController/insertNewProduct'); ?>
+        <form action="" method="post">
+            <div class="form-group">
+                <label for="productName">Product Name</label>
+                <input type="text" class="form-control" name="productName" required="">
+                <?php echo form_error('name','<span class="help-block">','</span>'); ?>
+            </div>
+            <div class="form-group">
+                <label for="company ID">Product is owned by company: </label>
+                     <select name="companyID" required="">
+                        <?php
+                            foreach($availCompany as $key =>$value){
+                                echo '<option value="'.$value['companyID'].'">'.$value['companyName'].'</option>';
+                            }
+                        ?>                           
+                    </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" name="confirm" class="btn btn-primary" value="Add New Product"/>
+            </div>
+        </form>
+    <?php echo form_close(); ?> 
         <table id="prodList" class='table table-striped table-bordered' cellspacing='0'>
 			 <thead>
                  <tr>
                     <th>Product ID</th>
                     <th>Product Name</th>
-                    <th>Customer Name</th>
+                    <th>Company Name</th>
                     <th>Delete</th>
                  </tr>
              </thead>
@@ -75,12 +99,12 @@
                     foreach($productData as $key => $value){
                         $id = $value['productID'];
                         $productName = $value['productName'];
-                        $customerName = $value['customerUsername'];
+                        $companyName = $value['companyName'];
 
                         echo "<tr>";
                         echo "<td>".$id."</td>";
                         echo "<td>".$productName."</td>";
-                        echo "<td>".$customerName."</td>";
+                        echo "<td>".$companyName."</td>";
                         echo '<td> <a class="btn btn-danger" name="btnDelete" href="'.base_url().'index.php/AdminController/deleteProduct/'.$value['productID'].'">';
                         echo '<span class="fa fa-close"></span>   Delete Prod</a>';
                         echo "</tr>";

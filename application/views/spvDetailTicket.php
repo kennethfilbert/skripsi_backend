@@ -32,6 +32,7 @@
                 </ul>
                 </ul>
                     <?php
+                                echo '<a style="color: white; margin-right: 1%">'.$this->session->userdata['isUserLoggedIn']['userName'].'</a>';
                                 echo '<a href="'.base_url().'index.php/SpvController/logout','">';
                                 echo '<span class="fa fa-power-off"></span>';
                                 echo '   Sign Out';
@@ -97,6 +98,29 @@
                 ?>
                 <li class="list-group-item"><?php echo "Interval between ticket added and last updated: ".$intervalAmount." days";?></li>
                 <li class="list-group-item"><?php echo "Description: ".$details[0]['description'];?></li>
+                <li class="list-group-item">
+                    <?php echo "Customer Feedback: ";
+                    
+                        if($details[0]['feedback']!=null){
+                            echo $details[0]['feedback'];
+                        }
+                        else echo "<i>No Feedback Yet</i>";
+                    ?>
+                </li>
+                
+                <li class="list-group-item">
+                    <?php echo "Approval Status: ";
+                        if($details[0]['approved'] != null && $details[0]['approved']==1){
+                            echo "<i>Approved</i>";
+                        }
+                        elseif($details[0]['approved'] != null && $details[0]['approved']==0){
+                            echo "<i>Not Approved</i>";
+                        }
+                        else{
+                            echo "<i>Not Yet Approved</i>";
+                        }
+                
+                    ?>
                 
                 <li class="list-group-item">Screenshot: <br><?php echo '<img src="'.$details[0]['picturePath'].'" style="width:60%">'; ?> </li>
                 

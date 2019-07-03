@@ -77,7 +77,57 @@ class SpvModel extends CI_Model{
         }
     }
 
-    public function delegateTicket($ticketID, $userID, $spvName){
+    public function getFeedbackNotification($userID){
+        $condition  = "feedbackNotifSeen = 0 AND userID = "."'".$userID."'";
+        $this->db->select('*');
+        $this->db->from('tickets');
+        $this->db->where($condition);
+        $query = $this->db->get();
+
+        if($query->num_rows() != 0){
+            return $query->result();  
+        }
+        else{
+            return false;
+        }
+    }
+
+    public function viewNotification($ticketID){
+        $condition = "delegatedNotif = 1 AND ticketID = "."'".$ticketID."'";
+            $ticketData = array(
+                'delegatedNotif' => 0,
+                'notificationSeen' => 1
+            );
+            $this->db->set($ticketData);
+            $this->db->where($condition);
+            $this->db->update('tickets');
+            //$this->db->limit(1);
+        if($this->db->affected_rows() > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public function viewFeedbackNotification($ticketID){
+        $condition = "feedbackNotifSeen = 0 AND ticketID = "."'".$ticketID."'";
+            $ticketData = array(
+                'feedbackNotifSeen' => 1
+            );
+            $this->db->set($ticketData);
+            $this->db->where($condition);
+            $this->db->update('tickets');
+            //$this->db->limit(1);
+        if($this->db->affected_rows() > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public function delegateTicket($ticketData, $userID, $spvName){
         $newData = array(
             'userID' => $userID,
             'status' => 2,
@@ -86,10 +136,98 @@ class SpvModel extends CI_Model{
             'delegatedTo' => $userID
         );
         $this->db->set($newData);
-		$this->db->where('ticketID', $ticketID);
+		$this->db->where('ticketID', $ticketData[0]['ticketID']);
         $this->db->update('tickets');
 
         if($this->db->affected_rows() > 0){
+            date_default_timezone_set('Asia/Jakarta'); 
+            $date = date('d/m/Y H:i:s');
+
+           
+                $subject = "Your Support Ticket's work has been started";
+                $message = "
+        			<html>
+        			<head>
+        				<title>Your Support Ticket Has Been Updated</title>
+        				
+        			</head>
+        			<body>
+        				<div style='display: block; margin-left: auto;
+        				margin-right: auto; width: 70%;'>
+        				
+        				<p>Dear: </p>
+        				".$ticketData[0]['customerName']."
+                        <br><p>On ".$date." You have submitted a support ticket with the following details: </p><br>
+                        <ul>
+                            <li>
+                                Ticket ID/Token     : ".$ticketData[0]['token']."
+                            </li>
+                            <li>
+                                Ticket Title/General Idea     : ".$ticketData[0]['ticketTitle']."
+                            </li>
+                            <li>
+                                Contact Name        : ".$ticketData[0]['customerName']."
+                            </li>
+                            <li>
+                                Contact E-mail      : ".$ticketData[0]['customerEmail']."
+                            </li>
+                            <li>
+                                Phone no.           : ".$ticketData[0]['customerPhone']."
+                            </li>
+                            <li>
+                                Regarding Product   : ".$ticketData[0]['productName']."
+                            </li>
+                            <li>
+                                Inquiry Type        : ".$ticketData[0]['inquiryType']."
+                            </li>
+                           
+                            <li>
+                                Description         : ".$ticketData[0]['description']."
+                            </li>
+                        </ul>
+                        <br>
+                        <p>Your ticket has been handled by one of our employees, and We will notify you via further e-mails regarding the progress of your ticket.</p>
+
+                        <p>Please visit your profile in the support website for more details.</p>
+                        
+        				<p>Regards,</p>
+
+        				<p>PT MMG Support</p>
+        				
+        			</div>
+        		</body>
+                </html>";
+                $config = array(
+        			'protocol' => 'smtp',
+        			'smtp_host' => 'ssl://smtp.googlemail.com',
+        			'smtp_port' => 465,
+        			'smtp_user' => 'kennethfilbert343@gmail.com',
+        			'smtp_pass' => 'HAUNtings',
+        			'mailtype' => 'html',
+        			'charset' => 'iso-8859-1',
+        			'wordwrap' => TRUE
+        		);
+
+        		$this->email->initialize($config);
+        		$this->email->set_mailtype("html");
+        		$this->email->set_newline("\r\n");
+
+        		$this->email->to($ticketData[0]['customerEmail']);
+        		$this->email->from('support@mmg.com','Mitra Mentari Global');
+        		$this->email->subject($subject);
+        		$this->email->message($message);
+
+        				//Send email
+        		$this->email->send();
+        		$this->load->library('encrypt');
+
+            $myTicket = array(
+                'ticketID' => $ticketData[0]['ticketID'],
+                'userID' => $userID,
+                'status' => 2,
+                'description' => 'Work Started'
+            );
+            $this->db->insert('changelog', $myTicket);
             return true;
         }
         else{
@@ -98,7 +236,7 @@ class SpvModel extends CI_Model{
 
     }
 
-    public function handleTicket($ticketID, $userID){
+    public function handleTicket($ticketData, $userID){
         $newData = array(
             'userID' => $userID,
             'status' => 2,
@@ -106,10 +244,90 @@ class SpvModel extends CI_Model{
             'delegatedNotif' => 0
         );
         $this->db->set($newData);
-		$this->db->where('ticketID', $ticketID);
+		$this->db->where('ticketID', $ticketData[0]['ticketID']);
         $this->db->update('tickets');
         
         if($this->db->affected_rows() > 0){
+            date_default_timezone_set('Asia/Jakarta'); 
+            $date = date('d/m/Y H:i:s');
+
+           
+                $subject = "Your Support Ticket's work has been started";
+                $message = "
+        			<html>
+        			<head>
+        				<title>Your Support Ticket Has Been Updated</title>
+        				
+        			</head>
+        			<body>
+        				<div style='display: block; margin-left: auto;
+        				margin-right: auto; width: 70%;'>
+        				
+        				<p>Dear: </p>
+        				".$ticketData[0]['customerName']."
+                        <br><p>On ".$date." You have submitted a support ticket with the following details: </p><br>
+                        <ul>
+                            <li>
+                                Ticket ID/Token     : ".$ticketData[0]['token']."
+                            </li>
+                            <li>
+                                Ticket Title/General Idea     : ".$ticketData[0]['ticketTitle']."
+                            </li>
+                            <li>
+                                Contact Name        : ".$ticketData[0]['customerName']."
+                            </li>
+                            <li>
+                                Contact E-mail      : ".$ticketData[0]['customerEmail']."
+                            </li>
+                            <li>
+                                Phone no.           : ".$ticketData[0]['customerPhone']."
+                            </li>
+                            <li>
+                                Regarding Product   : ".$ticketData[0]['productName']."
+                            </li>
+                            <li>
+                                Inquiry Type        : ".$ticketData[0]['inquiryType']."
+                            </li>
+                           
+                            <li>
+                                Description         : ".$ticketData[0]['description']."
+                            </li>
+                        </ul>
+                        <br>
+                        <p>Your ticket has been handled by one of our employees, and We will notify you via further e-mails regarding the progress of your ticket.</p>
+
+                        <p>Please visit your profile in the support website for more details.</p>
+                        
+        				<p>Regards,</p>
+
+        				<p>PT MMG Support</p>
+        				
+        			</div>
+        		</body>
+                </html>";
+                $config = array(
+        			'protocol' => 'smtp',
+        			'smtp_host' => 'ssl://smtp.googlemail.com',
+        			'smtp_port' => 465,
+        			'smtp_user' => 'kennethfilbert343@gmail.com',
+        			'smtp_pass' => 'HAUNtings',
+        			'mailtype' => 'html',
+        			'charset' => 'iso-8859-1',
+        			'wordwrap' => TRUE
+        		);
+
+        		$this->email->initialize($config);
+        		$this->email->set_mailtype("html");
+        		$this->email->set_newline("\r\n");
+
+        		$this->email->to($ticketData[0]['customerEmail']);
+        		$this->email->from('support@mmg.com','Mitra Mentari Global');
+        		$this->email->subject($subject);
+        		$this->email->message($message);
+
+        				//Send email
+        		$this->email->send();
+        		$this->load->library('encrypt');
             $myTicket = array(
                 'ticketID' => $ticketID,
                 'userID' => $userID,
@@ -369,7 +587,7 @@ class SpvModel extends CI_Model{
             return false;
         }
     }
-
+/*
     public function updateUser($newData, $userID){
         $this->db->set($newData);
 		$this->db->where('userID', $userID);
@@ -588,5 +806,5 @@ class SpvModel extends CI_Model{
     public function insertNewProduct($newData){
         $this->db->insert('products',$newData);
         return true;
-    }
+    }*/
 }
